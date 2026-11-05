@@ -50,9 +50,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 @keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,-1%)} 80%{transform:translate(3%,3%)} 100%{transform:translate(0,0)} }
 .main { position: relative; z-index: 2; }
-.fx-layer { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 90; pointer-events: none; }
+.fx-layer { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1000; pointer-events: none; }
 
-.cursor-dot, .cursor-ring { position: fixed; left: 0; top: 0; z-index: 200; pointer-events: none; }
+.cursor-dot, .cursor-ring { position: fixed; left: 0; top: 0; z-index: 1001; pointer-events: none; }
 .cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #fff; mix-blend-mode: difference; }
 .cursor-ring { width: 0; height: 0; }
 .cursor-ring::before {
