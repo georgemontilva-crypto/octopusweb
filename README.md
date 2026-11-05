@@ -23,7 +23,7 @@ npm run build && npm start   # http://localhost:3000
 ```
 
 ## Railway
-Deploys as-is (`railway.json`): build `npm ci && npm run build`, start `npm start`, healthcheck `/health`. No database.
+Deploys as-is (`railway.json`): build `npm run build` (Railway installs dependencies itself), start `npm start`, healthcheck `/health`. No database.
 
 ### Environment variables (all optional)
 | Variable | Purpose |
