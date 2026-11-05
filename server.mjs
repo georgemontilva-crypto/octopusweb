@@ -82,6 +82,18 @@ async function handleContact(req, res) {
   send(res, 200, { ok: true });
 }
 
+let indexHtml = null;
+function renderIndex(req) {
+  if (!indexHtml) indexHtml = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
+  const host = String(req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0].trim();
+  const proto = String(req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
+  if (!/^[a-z0-9.:-]+$/i.test(host)) return indexHtml;
+  const origin = `${proto}://${host}`;
+  return indexHtml
+    .replace('content="/og.jpg"', `content="${origin}/og.jpg"`)
+    .replace('<meta property="og:type"', `<meta property="og:url" content="${origin}/" />\n    <meta property="og:type"`);
+}
+
 function serveFile(res, file, cache) {
   const ext = path.extname(file).toLowerCase();
   res.writeHead(200, {
@@ -102,6 +114,10 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/health") return send(res, 200, { ok: true });
     const safe = path.normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");
     const file = path.join(DIST, safe);
+    if (safe === "/" || safe === "/index.html") {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
+      return res.end(renderIndex(req));
+    }
     if (file.startsWith(DIST) && fs.existsSync(file) && fs.statSync(file).isFile()) {
       return serveFile(res, file, safe.startsWith("/assets/"));
     }
@@ -110,7 +126,7 @@ const server = http.createServer(async (req, res) => {
       return res.end("Not found");
     }
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
-    fs.createReadStream(path.join(DIST, "index.html")).pipe(res);
+    res.end(renderIndex(req));
   } catch (e) {
     console.error(e);
     res.writeHead(500);

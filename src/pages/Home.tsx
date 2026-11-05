@@ -14,7 +14,7 @@ import { ScrollTrigger, scrollToEl } from "../lib/motion";
 import { useSeo } from "../lib/seo";
 
 export default function Home() {
-  useSeo("OCTOPUS — From the Deep", "OCTOPUS — bold botanical blends pulled up from the deep. Discover our product lines, including Blue Lotus pre-rolls and dabs. 21+.");
+  useSeo("OCTOPUS — From the Deep", "OCTOPUS — bold botanical blends pulled up from the deep. Explore our product lines. Strictly 21+.");
   useEffect(() => {
     resetTint();
     const t = setTimeout(() => {
