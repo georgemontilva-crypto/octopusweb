@@ -53,6 +53,7 @@ export default function Formats() {
   }, []);
   return (
     <section ref={root} className="fmt" id="products">
+      <p className="kicker">Blue Lotus line</p>
       <h2 className="fmt-title section-title">
         <span className="ln-mask"><span className="ln">Two ways</span></span>
         <span className="ln-mask"><span className="ln outline">to go under</span></span>

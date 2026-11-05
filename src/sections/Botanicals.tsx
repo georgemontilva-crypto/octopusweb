@@ -23,11 +23,12 @@ export default function Botanicals() {
 
   return (
     <section ref={root} className="bot" id="botanicals">
+      <p className="kicker">Inside Blue Lotus</p>
       <h2 className="bot-title section-title">
         <span className="ln-mask"><span className="ln">Pure</span></span>
         <span className="ln-mask"><span className="ln outline">botanicals</span></span>
       </h2>
-      <p className="section-lead">Four plants. Nothing synthetic. Every OCTOPUS product is built on dried Blue Lotus flower and a smooth herbal base.</p>
+      <p className="section-lead">Four plants. Nothing synthetic. Every Blue Lotus product is built on dried Blue Lotus flower and a smooth herbal base.</p>
 
       <div className="bot-orbit">
         <div className="bot-core">

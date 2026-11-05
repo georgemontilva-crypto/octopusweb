@@ -7,7 +7,7 @@ import { useSeo } from "../lib/seo";
 import { useEntered } from "../App";
 
 export default function LabReports() {
-  useSeo("Lab Results · OCTOPUS", "Lab results for every OCTOPUS Blue Lotus flavor — pre-rolls and dabs.");
+  useSeo("Lab Results · OCTOPUS", "Lab results for OCTOPUS products, by line and flavor.");
   const root = useRef<HTMLDivElement>(null);
   const entered = useEntered();
   useEffect(() => {
@@ -29,8 +29,9 @@ export default function LabReports() {
           <span className="ln-mask"><span className="ln">Lab</span></span>
           <span className="ln-mask"><span className="ln outline">results</span></span>
         </h1>
-        <p className="section-lead">Every OCTOPUS batch is lab tested. Scan the QR code on your pack, or find your flavor below. Certificates are being uploaded batch by batch.</p>
+        <p className="section-lead">Scan the QR code on your pack, or find your product line and flavor below. Certificates are being uploaded batch by batch.</p>
       </header>
+      <h2 className="lr-line">Blue Lotus <span>· Pre-Roll 2G &amp; Dabs 2.5G</span></h2>
       <div className="lr-grid">
         {FLAVORS.map((f) => (
           <article key={f.slug} className="lr-card" style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2 }}>

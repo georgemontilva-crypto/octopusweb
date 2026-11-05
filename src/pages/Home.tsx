@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Hero from "../sections/Hero";
 import Manifesto from "../sections/Manifesto";
 import Flavors from "../sections/Flavors";
+import Lines from "../sections/Lines";
 import Formats from "../sections/Formats";
 import Collection from "../sections/Collection";
 import Botanicals from "../sections/Botanicals";
@@ -13,7 +14,7 @@ import { ScrollTrigger, scrollToEl } from "../lib/motion";
 import { useSeo } from "../lib/seo";
 
 export default function Home() {
-  useSeo("OCTOPUS · Blue Lotus — From the Deep", "Botanical Blue Lotus pre-rolls (2G) and dabs (2.5G) in six flavors. No THC. No hemp. 21+.");
+  useSeo("OCTOPUS — From the Deep", "OCTOPUS — bold botanical blends pulled up from the deep. Discover our product lines, including Blue Lotus pre-rolls and dabs. 21+.");
   useEffect(() => {
     resetTint();
     const t = setTimeout(() => {
@@ -30,10 +31,11 @@ export default function Home() {
     <>
       <Hero />
       <div className="marquees">
-        <Marquee items={["No THC", "No Hemp", "No Delta", "100% Botanical", "Blue Lotus", "21+ Only"]} />
+        <Marquee items={["OCTOPUS", "From the deep", "Eight arms", "Bold flavor", "21+ only"]} />
         <Marquee reverse className="marquee-alt" items={["Blue Dreamz", "Royal Haze", "Purple Paradise", "Midnight Lotus", "Cloud 9", "Egyptian Nights"]} />
       </div>
       <Manifesto />
+      <Lines />
       <Flavors />
       <Formats />
       <Collection />

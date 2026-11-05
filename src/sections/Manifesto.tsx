@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "../lib/motion";
 
 const TEXT =
-  "Eight arms. Six flavors. One sacred flower pulled up from the deep — Blue Lotus, the water lily of the ancient Nile, reborn as smoke and amber.";
-const HOT = new Set(["Eight", "arms.", "Six", "flavors.", "Blue", "Lotus,"]);
+  "Eight arms. Endless flavor. OCTOPUS pulls bold botanical blends up from the deep — loud colors, big flavor, made for adults who want something stranger than the usual.";
+const HOT = new Set(["Eight", "arms.", "Endless", "flavor.", "OCTOPUS"]);
 
 export default function Manifesto() {
   const root = useRef<HTMLElement>(null);
@@ -32,7 +32,7 @@ export default function Manifesto() {
         <div className="mani-media-shade" />
       </div>
       <div className="mani-inner">
-        <p className="mani-kicker">— The legend</p>
+        <p className="mani-kicker">— The brand</p>
         <p className="mani-text">
           {TEXT.split(" ").map((w, i) => (
             <span key={i} className={"mani-word" + (HOT.has(w) ? " is-hot" : "")}>

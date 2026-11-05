@@ -81,19 +81,19 @@ export default function Flavors() {
     <div className="pin-wrap">
     <section ref={root} className="flv" id="flavors">
       <div className="flv-head">
-        <span className="kicker">Pick your current</span>
+        <span className="kicker">Blue Lotus line</span>
         <div className="flv-progress"><div ref={bar} /></div>
         <span className="flv-hint">Scroll · Swipe →</span>
       </div>
       <div ref={track} className="flv-track">
         <article className="fl-intro">
-          <p className="kicker">06 flavors · 2 formats</p>
+          <p className="kicker">Featured line · Blue Lotus</p>
           <h2 className="fl-intro-title">
             Six<br />
             <span className="drip">currents</span>
             <br />one abyss
           </h2>
-          <p className="fl-intro-text">Every flavor has its own color, its own vibe, its own corner of the deep. Ride the current →</p>
+          <p className="fl-intro-text">Blue Lotus comes in six flavors and two formats. Each one has its own color, its own vibe, its own corner of the deep →</p>
         </article>
         {FLAVORS.map((f, i) => (
           <article key={f.slug} className="fl-panel" data-slug={f.slug} style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2, ["--ink" as string]: f.ink }}>

@@ -44,9 +44,9 @@ export default function Hero() {
     <div className="pin-wrap">
     <section ref={root} className="hero" id="top">
       <Tentacles active={entered} />
-      <h1 className="hero-title" aria-label="OCTOPUS Blue Lotus">
-        <Chars text="BLUE" className="hero-title-l" />
-        <Chars text="LOTUS" className="hero-title-r" />
+      <h1 className="hero-title" aria-label="OCTOPUS — Dive deep">
+        <Chars text="DIVE" className="hero-title-l" />
+        <Chars text="DEEP" className="hero-title-r" />
       </h1>
       <div className="hero-logo-stage">
         <div className="hero-logo-wrap">
@@ -58,14 +58,14 @@ export default function Hero() {
       </div>
       <div className="hero-bottom">
         <p className="hero-sub hero-fade">
-          Botanical pre-rolls &amp; dabs, pulled from the abyss.
+          Bold botanical blends, pulled up from the abyss.
           <br />
-          <b>Six flavors.</b> Zero THC. Pure Blue Lotus.
+          <b>Meet the octopus.</b> Strictly 21+.
         </p>
         <div className="hero-ctas hero-fade">
           <Magnetic>
-            <button className="btn btn-glow" onClick={() => scrollToEl("#flavors")} data-cursor="DIVE">
-              Explore the flavors
+            <button className="btn btn-glow" onClick={() => scrollToEl("#lines")} data-cursor="DIVE">
+              Explore our lines
             </button>
           </Magnetic>
           <Magnetic>
@@ -73,13 +73,8 @@ export default function Hero() {
           </Magnetic>
         </div>
       </div>
-      <div className="hero-chips hero-fade" aria-hidden>
-        <span>2G Pre-Roll</span>
-        <span>2.5G Dabs</span>
-        <span className="chip-21">21+</span>
-      </div>
       <button className="scroll-cue hero-fade" onClick={() => scrollToEl("#manifesto")} aria-label="Scroll down">
-        <span>DIVE</span>
+        <span>SCROLL</span>
         <i />
       </button>
     </section>

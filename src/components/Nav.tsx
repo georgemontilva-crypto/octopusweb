@@ -7,9 +7,8 @@ import { FLAVORS } from "../data";
 export const pending = { hash: "" };
 
 const LINKS = [
-  { label: "Flavors", hash: "#flavors" },
-  { label: "Products", hash: "#products" },
-  { label: "Botanicals", hash: "#botanicals" },
+  { label: "Our Lines", hash: "#lines" },
+  { label: "Blue Lotus", hash: "#flavors" },
 ];
 
 export default function Nav() {
@@ -87,6 +86,7 @@ export default function Nav() {
           ))}
           <div className="menu-mask"><InkLink href="/lab-reports" className="menu-item" onClick={() => setOpen(false)}>Lab Results</InkLink></div>
           <div className="menu-mask"><InkLink href="/contact" className="menu-item" onClick={() => setOpen(false)}>Contact</InkLink></div>
+          <p className="menu-sub">Blue Lotus flavors</p>
           <div className="menu-flavors">
             {FLAVORS.map((f) => (
               <InkLink key={f.slug} href={`/flavors/${f.slug}`} color={f.color} className="menu-dot" onClick={() => setOpen(false)} ariaLabel={f.name}>

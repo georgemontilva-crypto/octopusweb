@@ -23,8 +23,8 @@ export function LabCta() {
       </div>
       <div className="lab-copy">
         <p className="kicker">Transparency, from the bottom up</p>
-        <h2 className="section-title small">Every batch.<br /><span className="outline">Lab tested.</span></h2>
-        <p className="section-lead">Scan the QR code on any OCTOPUS pack to see its lab results and product info — or browse every report by flavor.</p>
+        <h2 className="section-title small">Lab results.<br /><span className="outline">Out in the open.</span></h2>
+        <p className="section-lead">Scan the QR code on your OCTOPUS pack to see its lab results and product info — or browse reports by line and flavor.</p>
         <Magnetic><InkLink href="/lab-reports" className="btn btn-glow" cursor="SCAN">View lab results</InkLink></Magnetic>
       </div>
     </section>
@@ -46,7 +46,7 @@ export function WholesaleCta() {
       <div className="ws-body">
         <p className="kicker">Retailers & distributors</p>
         <h2 className="section-title small">Put the octopus<br /><span className="drip">on your shelf</span></h2>
-        <p className="section-lead">Countertop displays that glow from across the store. 20-pack pre-roll displays and 6-flavor dab displays — ask us about wholesale.</p>
+        <p className="section-lead">Countertop displays that glow from across the store. Ask us about wholesale pricing and the full OCTOPUS catalog.</p>
         <Magnetic><InkLink href="/contact" className="btn btn-glow" cursor="LET'S TALK">Become a retailer</InkLink></Magnetic>
       </div>
       <div className="ws-displays">

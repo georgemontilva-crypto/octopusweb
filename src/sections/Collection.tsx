@@ -107,6 +107,7 @@ export default function Collection() {
 
   return (
     <section ref={root} className="col">
+      <p className="kicker">Blue Lotus line</p>
       <h2 className="col-title section-title">
         <span className="ln-mask"><span className="ln">The full</span></span>
         <span className="ln-mask"><span className="ln drip">collection</span></span>

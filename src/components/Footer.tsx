@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-top">
         <div className="footer-col">
-          <h4>Flavors</h4>
+          <h4>Blue Lotus flavors</h4>
           {FLAVORS.map((f) => (
             <InkLink key={f.slug} href={`/flavors/${f.slug}`} color={f.color} className="footer-link">
               <i style={{ background: f.color }} />
@@ -21,7 +21,7 @@ export default function Footer() {
           <InkLink href="/contact" className="footer-link">Contact & Wholesale</InkLink>
         </div>
         <div className="footer-col footer-badges">
-          <h4>Inside every pack</h4>
+          <h4>Blue Lotus line</h4>
           <ul>
             <li>No THC</li>
             <li>No Hemp</li>
@@ -38,7 +38,7 @@ export default function Footer() {
       <p className="footer-legal">{DISCLAIMER}</p>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Octopus Co. · 21+ only</span>
-        <span>Blue Lotus · From the deep</span>
+        <span>From the deep</span>
       </div>
     </footer>
   );

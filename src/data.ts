@@ -145,3 +145,17 @@ export const INGREDIENTS = [
 
 export const DISCLAIMER =
   "This product is for botanical incense and aromatherapy purposes only. It is not intended for human consumption as a food or dietary supplement. This product is not intended to diagnose, treat, cure, or prevent any disease. These statements have not been evaluated by the Food and Drug Administration (FDA). Must be 21 years of age or older to purchase. Keep out of reach of children and pets. Smoking is hazardous to your health. May cause drowsiness — do not operate a vehicle or machinery after use. Consult a physician before use if you are pregnant, nursing, have a medical condition, or are taking any medication.";
+
+/** OCTOPUS product lines. Add new lines here as they launch. */
+export const LINES = [
+  {
+    id: "blue-lotus",
+    name: "Blue Lotus",
+    status: "available" as const,
+    formats: ["Pre-Roll 2G", "Dabs 2.5G"],
+    flavors: 6,
+    text: "Dried Blue Lotus flower and herbal botanicals in six flavors — our first line out of the deep.",
+    image: "/img/p/lineup-blue.webp",
+    art: "/img/art/abyss.webp",
+  },
+];
