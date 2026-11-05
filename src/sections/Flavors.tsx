@@ -58,18 +58,12 @@ export default function Flavors() {
               }
             });
           },
-          { root: tr, threshold: 0.6 },
+          { rootMargin: "-45% 0px -45% 0px" },
         );
         panels.forEach((p) => io.observe(p));
-        const onScroll = () => {
-          const max = tr.scrollWidth - tr.clientWidth;
-          if (bar.current) bar.current.style.transform = `scaleX(${max ? tr.scrollLeft / max : 0})`;
-        };
-        tr.addEventListener("scroll", onScroll, { passive: true });
-        const st = ScrollTrigger.create({ trigger: el, start: "top 60%", end: "bottom 40%", onLeave: resetTint, onLeaveBack: resetTint, onEnter: () => tr.dispatchEvent(new Event("scroll")) });
+        const st = ScrollTrigger.create({ trigger: el, start: "top 60%", end: "bottom 40%", onLeave: resetTint, onLeaveBack: resetTint });
         return () => {
           io.disconnect();
-          tr.removeEventListener("scroll", onScroll);
           st.kill();
         };
       });
@@ -83,7 +77,7 @@ export default function Flavors() {
       <div className="flv-head">
         <span className="kicker">Blue Lotus line</span>
         <div className="flv-progress"><div ref={bar} /></div>
-        <span className="flv-hint">Scroll · Swipe →</span>
+        <span className="flv-hint">Scroll →</span>
       </div>
       <div ref={track} className="flv-track">
         <article className="fl-intro">

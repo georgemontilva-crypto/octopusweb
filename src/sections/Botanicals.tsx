@@ -12,7 +12,7 @@ export default function Botanicals() {
       gsap.from(".bot-title .ln", { yPercent: 110, stagger: 0.12, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 75%" } });
       gsap.fromTo(".bot-core", { scale: 0.3, rotate: -90, opacity: 0 }, { scale: 1, rotate: 0, opacity: 1, duration: 1.8, ease: "expo.out", scrollTrigger: { trigger: ".bot-orbit", start: "top 80%" } });
       gsap.from(".bot-card", { y: 80, opacity: 0, stagger: 0.12, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".bot-orbit", start: "top 70%" } });
-      gsap.fromTo(".stamp", { scale: 3.2, opacity: 0, rotate: () => gsap.utils.random(-30, 30) }, {
+      gsap.fromTo(".stamp", { scale: 1.8, opacity: 0, rotate: () => gsap.utils.random(-30, 30) }, {
         scale: 1, opacity: 1, rotate: () => gsap.utils.random(-9, 9), stagger: 0.16, duration: 0.55, ease: "back.out(2.2)",
         scrollTrigger: { trigger: ".stamps", start: "top 85%" },
       });
