@@ -1,13 +1,9 @@
 import { useEffect } from "react";
 import Hero from "../sections/Hero";
-import Manifesto from "../sections/Manifesto";
-import Flavors from "../sections/Flavors";
 import Lines from "../sections/Lines";
-import Formats from "../sections/Formats";
-import Collection from "../sections/Collection";
-import Botanicals from "../sections/Botanicals";
-import { LabCta, WholesaleCta } from "../sections/Closers";
-import { Marquee } from "../components/Fx";
+import Showroom from "../sections/Showroom";
+import FlavorGrid from "../sections/FlavorGrid";
+import { Counter, LabStrip } from "../sections/Counter";
 import { pending } from "../components/Nav";
 import { resetTint } from "../lib/theme";
 import { ScrollTrigger, scrollToEl } from "../lib/motion";
@@ -30,18 +26,11 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <div className="marquees">
-        <Marquee items={["OCTOPUS", "From the deep", "Eight arms", "Bold flavor", "21+ only"]} />
-        <Marquee reverse className="marquee-alt" items={["Blue Dreamz", "Royal Haze", "Purple Paradise", "Midnight Lotus", "Cloud 9", "Egyptian Nights"]} />
-      </div>
-      <Manifesto />
       <Lines />
-      <Flavors />
-      <Formats />
-      <Collection />
-      <Botanicals />
-      <LabCta />
-      <WholesaleCta />
+      <Showroom />
+      <FlavorGrid />
+      <Counter />
+      <LabStrip />
     </>
   );
 }

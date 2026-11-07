@@ -14,17 +14,24 @@ export type Flavor = {
   disp: string;
   box: string;
   tall: string;
+  /** textures for the real 3D models (tube label + dabs box faces) */
+  tex: { tube: string; front: string | null; side: string | null };
 };
 
 const img = (slug: string, k: string) => `/img/p/${slug}-${k}.webp`;
 
-const make = (f: Omit<Flavor, "art" | "tube" | "disp" | "box" | "tall">, hasTall = true): Flavor => ({
+const make = (f: Omit<Flavor, "art" | "tube" | "disp" | "box" | "tall" | "tex">, hasTall = true): Flavor => ({
   ...f,
   art: `/img/art/${f.slug}.webp`,
   tube: img(f.slug, "tube"),
   disp: img(f.slug, "disp"),
   box: img(f.slug, "box"),
   tall: hasTall ? img(f.slug, "tall") : img(f.slug, "box"),
+  tex: {
+    tube: `/img/3d/${f.slug}-tube.webp`,
+    front: hasTall ? `/img/3d/${f.slug}-box-front.webp` : null,
+    side: hasTall ? `/img/3d/${f.slug}-box-side.webp` : null,
+  },
 });
 
 export const FLAVORS: Flavor[] = [

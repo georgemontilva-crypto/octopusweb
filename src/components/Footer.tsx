@@ -32,8 +32,8 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="footer-word" aria-hidden>
-        OCTOPUS
+      <div className="footer-logo">
+        <img src="/img/logo.webp" alt="OCTOPUS" loading="lazy" />
       </div>
       <p className="footer-legal">{DISCLAIMER}</p>
       <div className="footer-bottom">

@@ -7,6 +7,7 @@ An informational brand website for **OCTOPUS Blue Lotus**: botanical pre-rolls (
 - GSAP (ScrollTrigger) + Lenis for smooth scrolling and scroll-driven animation
 - Raw WebGL fragment shader for the "abyss" background (caustics, light rays, bubbles, bioluminescence) with adaptive resolution
 - Canvas 2D procedural tentacles (FABRIK inverse kinematics) that follow the cursor
+- three.js product stage (`src/three/`): one shared WebGL canvas renders real 3D products (tube = cylinder with the unwrapped label, dabs box = prism with its rectified faces) into DOM slots. Textures live in `public/img/3d/`
 - `server.mjs`: a dependency-free Node server that serves `dist/` (SPA fallback) and `POST /api/contact`
 
 ## Pages

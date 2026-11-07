@@ -3,7 +3,7 @@ import { gsap, lockScroll } from "../lib/motion";
 import { inkPulse, storage } from "../lib/theme";
 import { FLAVORS } from "../data";
 
-const PRELOAD = ["/img/logo.webp", "/img/art/abyss.webp", ...FLAVORS.map((f) => f.tube), ...FLAVORS.map((f) => f.art)];
+const PRELOAD = ["/img/logo.webp", ...FLAVORS.flatMap((f) => [f.tex.tube, f.tex.front, f.tex.side]).filter((x): x is string => !!x)];
 const KEY = "octopus_21_ok";
 
 export default function Intro({ onDone }: { onDone: () => void }) {

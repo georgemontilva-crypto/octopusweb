@@ -1,83 +1,95 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Tentacles from "../components/Tentacles";
-import { Chars, Magnetic, Tilt } from "../components/Fx";
+import { Magnetic } from "../components/Fx";
 import { InkLink } from "../components/Transition";
+import Product3D from "../three/Product3D";
+import { FLAVORS } from "../data";
 import { gsap, scrollToEl } from "../lib/motion";
+import { setTint } from "../lib/theme";
 import { useEntered } from "../App";
+
+// hero cycles through the flavors that have both 3D formats
+const HERO = FLAVORS.filter((f) => f.tex.front);
 
 export default function Hero() {
   const entered = useEntered();
   const root = useRef<HTMLElement>(null);
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const f = HERO[i];
+
+  useEffect(() => {
+    if (!entered) return;
+    setTint(f.color, f.color2);
+  }, [f, entered]);
+
+  useEffect(() => {
+    if (!entered || paused) return;
+    const t = setInterval(() => setI((x) => (x + 1) % HERO.length), 5200);
+    return () => clearInterval(t);
+  }, [entered, paused]);
 
   useEffect(() => {
     const el = root.current!;
     const ctx = gsap.context(() => {
-      gsap.set(".hero-title .ch", { yPercent: 120, rotate: 8, opacity: 0 });
-      gsap.set(".hero-logo-wrap", { scale: 0.4, opacity: 0, y: 80 });
-      gsap.set(".hero-fade", { y: 30, opacity: 0 });
-
-      gsap.timeline({
-        scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 1 },
-      })
-        .to(".hero-title-l", { xPercent: -45, opacity: 0.1 }, 0)
-        .to(".hero-title-r", { xPercent: 45, opacity: 0.1 }, 0)
-        .to(".hero-logo-stage", { scale: 1.5, yPercent: 20, opacity: 0, filter: "blur(10px)" }, 0)
-        .to(".hero-fade", { y: -60, opacity: 0 }, 0)
-        .to(".tentacles", { yPercent: 18 }, 0);
+      gsap.set(".hx-logo", { scale: 0.6, opacity: 0, y: 40 });
+      gsap.set(".hx-fade", { y: 30, opacity: 0 });
+      gsap.to(".hx-inner", { yPercent: 12, opacity: 0.2, ease: "none", scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true } });
     }, el);
     return () => ctx.revert();
   }, []);
 
   useEffect(() => {
     if (!entered) return;
-    const el = root.current!;
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.to(".hero-title .ch", { yPercent: 0, rotate: 0, opacity: 1, duration: 1.2, stagger: 0.05, ease: "expo.out" })
-        .to(".hero-logo-wrap", { scale: 1, opacity: 1, y: 0, duration: 1.6, ease: "elastic.out(1, 0.55)" }, 0.25)
-        .to(".hero-fade", { y: 0, opacity: 1, duration: 0.9, stagger: 0.1, ease: "power3.out" }, 0.8);
-    }, el);
+      gsap.to(".hx-logo", { scale: 1, opacity: 1, y: 0, duration: 1.4, ease: "elastic.out(1, 0.6)", delay: 0.1 });
+      gsap.to(".hx-fade", { y: 0, opacity: 1, duration: 0.9, stagger: 0.1, ease: "power3.out", delay: 0.5 });
+    }, root.current!);
     return () => ctx.revert();
   }, [entered]);
 
   return (
     <div className="pin-wrap">
-    <section ref={root} className="hero" id="top">
-      <Tentacles active={entered} />
-      <h1 className="hero-title" aria-label="OCTOPUS — Dive deep">
-        <Chars text="DIVE" className="hero-title-l" />
-        <Chars text="DEEP" className="hero-title-r" />
-      </h1>
-      <div className="hero-logo-stage">
-        <div className="hero-logo-wrap">
-          <Tilt max={12} className="hero-logo-tilt">
-            <div className="hero-halo" />
-            <img src="/img/logo.webp" alt="OCTOPUS logo" className="hero-logo" />
-          </Tilt>
+      <section ref={root} className="hx" id="top">
+        <Tentacles active={entered} />
+        <div className="hx-inner wrap">
+          <div className="hx-brand">
+            <img src="/img/logo.webp" alt="OCTOPUS" className="hx-logo" />
+            <p className="hx-line hx-fade">
+              Bold botanical blends.
+              <br />
+              <span>From the deep.</span>
+            </p>
+            <div className="hx-ctas hx-fade">
+              <Magnetic>
+                <button className="btn btn-glow" onClick={() => scrollToEl("#showroom")} data-cursor="DIVE">
+                  See the products
+                </button>
+              </Magnetic>
+              <Magnetic>
+                <InkLink href="/lab-reports" className="btn btn-ghost">Lab results</InkLink>
+              </Magnetic>
+            </div>
+          </div>
+          <div className="hx-stage hx-fade" onPointerEnter={() => setPaused(true)} onPointerLeave={() => setPaused(false)}>
+            <div className="hx-halo" style={{ background: `radial-gradient(circle, ${f.color}55, transparent 62%)` }} />
+            {entered && (
+              <>
+                <Product3D key={"b" + f.slug} flavor={f} kind="box" className="hx-box" fill={0.86} phase={1.3} />
+                <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="hx-tube" fill={0.9} />
+              </>
+            )}
+          </div>
+          <div className="hx-caption hx-fade">
+              <span style={{ color: f.color }}>{f.name}</span>
+              <div className="hx-dots" role="tablist" aria-label="Flavor">
+                {HERO.map((x, k) => (
+                  <button key={x.slug} role="tab" aria-selected={k === i} aria-label={x.name} className={k === i ? "is-on" : ""} style={{ ["--s" as string]: x.color }} onClick={() => setI(k)} />
+                ))}
+              </div>
+          </div>
         </div>
-      </div>
-      <div className="hero-bottom">
-        <p className="hero-sub hero-fade">
-          Bold botanical blends, pulled up from the abyss.
-          <br />
-          <b>Meet the octopus.</b> Strictly 21+.
-        </p>
-        <div className="hero-ctas hero-fade">
-          <Magnetic>
-            <button className="btn btn-glow" onClick={() => scrollToEl("#lines")} data-cursor="DIVE">
-              Explore our lines
-            </button>
-          </Magnetic>
-          <Magnetic>
-            <InkLink href="/lab-reports" className="btn btn-ghost">Lab results</InkLink>
-          </Magnetic>
-        </div>
-      </div>
-      <button className="scroll-cue hero-fade" onClick={() => scrollToEl("#manifesto")} aria-label="Scroll down">
-        <span>SCROLL</span>
-        <i />
-      </button>
-    </section>
+      </section>
     </div>
   );
 }
