@@ -4,6 +4,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import zlib from "node:zlib";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.join(__dirname, "dist");
@@ -94,14 +95,52 @@ function renderIndex(req) {
     .replace('<meta property="og:type"', `<meta property="og:url" content="${origin}/" />\n    <meta property="og:type"`);
 }
 
-function serveFile(res, file, cache) {
+// text assets are compressed once and kept in memory (Railway does not compress responses)
+const COMPRESSIBLE = new Set([".js", ".css", ".html", ".svg", ".json", ".txt", ".xml"]);
+const packed = new Map();
+function compressed(file, enc) {
+  const key = enc + ":" + file;
+  if (!packed.has(key)) {
+    const raw = fs.readFileSync(file);
+    packed.set(key, enc === "br"
+      ? zlib.brotliCompressSync(raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 9 } })
+      : zlib.gzipSync(raw, { level: 9 }));
+  }
+  return packed.get(key);
+}
+function pickEncoding(req) {
+  const ae = String(req.headers["accept-encoding"] || "");
+  return /\bbr\b/.test(ae) ? "br" : /\bgzip\b/.test(ae) ? "gzip" : null;
+}
+
+function serveFile(req, res, file, cache) {
   const ext = path.extname(file).toLowerCase();
-  res.writeHead(200, {
+  const headers = {
     "Content-Type": TYPES[ext] || "application/octet-stream",
-    "Cache-Control": cache ? "public, max-age=31536000, immutable" : "public, max-age=300",
+    "Cache-Control": cache ? "public, max-age=31536000, immutable" : "public, max-age=86400",
     "X-Content-Type-Options": "nosniff",
-  });
+    Vary: "Accept-Encoding",
+  };
+  const enc = COMPRESSIBLE.has(ext) ? pickEncoding(req) : null;
+  if (enc) {
+    const body = compressed(file, enc);
+    res.writeHead(200, { ...headers, "Content-Encoding": enc, "Content-Length": body.length });
+    return res.end(body);
+  }
+  res.writeHead(200, headers);
   fs.createReadStream(file).pipe(res);
+}
+
+function sendHtml(req, res, html) {
+  const enc = pickEncoding(req);
+  const headers = { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache", Vary: "Accept-Encoding" };
+  if (!enc) {
+    res.writeHead(200, headers);
+    return res.end(html);
+  }
+  const body = enc === "br" ? zlib.brotliCompressSync(html) : zlib.gzipSync(html);
+  res.writeHead(200, { ...headers, "Content-Encoding": enc });
+  res.end(body);
 }
 
 const server = http.createServer(async (req, res) => {
@@ -114,19 +153,15 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/health") return send(res, 200, { ok: true });
     const safe = path.normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");
     const file = path.join(DIST, safe);
-    if (safe === "/" || safe === "/index.html") {
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
-      return res.end(renderIndex(req));
-    }
+    if (safe === "/" || safe === "/index.html") return sendHtml(req, res, renderIndex(req));
     if (file.startsWith(DIST) && fs.existsSync(file) && fs.statSync(file).isFile()) {
-      return serveFile(res, file, safe.startsWith("/assets/"));
+      return serveFile(req, res, file, safe.startsWith("/assets/"));
     }
     if (path.extname(safe)) {
       res.writeHead(404);
       return res.end("Not found");
     }
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" });
-    res.end(renderIndex(req));
+    sendHtml(req, res, renderIndex(req));
   } catch (e) {
     console.error(e);
     res.writeHead(500);

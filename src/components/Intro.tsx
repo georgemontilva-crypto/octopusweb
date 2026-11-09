@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, lockScroll } from "../lib/motion";
 import { inkPulse, storage } from "../lib/theme";
 import { FLAVORS } from "../data";
+import { small, smUrl } from "../lib/img";
+import { preload3D } from "../three/Product3D";
 
-const PRELOAD = ["/img/logo.webp", ...FLAVORS.flatMap((f) => [f.tex.tube, f.tex.front, f.tex.side]).filter((x): x is string => !!x)];
+const PRELOAD = ["/img/logo.webp", (small() ? smUrl(FLAVORS[0].tex.tube) : FLAVORS[0].tex.tube)];
 const KEY = "octopus_21_ok";
 
 export default function Intro({ onDone }: { onDone: () => void }) {
@@ -13,6 +15,7 @@ export default function Intro({ onDone }: { onDone: () => void }) {
   const verified = useRef(storage.get(KEY) === "1");
 
   useEffect(() => {
+    preload3D();
     lockScroll(true);
     let done = 0;
     let shown = 0;

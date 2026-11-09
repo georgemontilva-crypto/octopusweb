@@ -5,6 +5,7 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { isTouch, reducedMotion } from "../lib/theme";
+import { small, smUrl } from "../lib/img";
 
 export type Kind = "tube" | "box";
 export type SlotOpts = {
@@ -68,7 +69,7 @@ class Stage {
       canvas.setAttribute("aria-hidden", "true");
       document.body.appendChild(canvas);
       const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
-      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouch() ? 1.75 : 2));
+      r.setPixelRatio(Math.min(window.devicePixelRatio || 1, isTouch() ? 1.5 : 2));
       r.setSize(window.innerWidth, window.innerHeight, false);
       r.setScissorTest(true);
       r.autoClear = false;
@@ -109,12 +110,13 @@ class Stage {
     this.renderer?.setSize(window.innerWidth, window.innerHeight, false);
   };
 
-  tex(url: string, kind: "tube" | "face") {
+  tex(src: string, kind: "tube" | "face") {
+    const url = small() ? smUrl(src) : src;
     let t = this.texCache.get(url);
     if (!t) {
       t = this.loader.load(url);
       t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 8;
+      t.anisotropy = isTouch() ? 4 : 8;
       if (kind === "tube") {
         // front half of the label is the image; the back half mirrors it
         t.wrapS = THREE.MirroredRepeatWrapping;

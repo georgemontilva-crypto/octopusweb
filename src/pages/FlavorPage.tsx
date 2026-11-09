@@ -9,6 +9,7 @@ import { setTint } from "../lib/theme";
 import { useSeo } from "../lib/seo";
 import { useEntered } from "../App";
 import NotFound from "./NotFound";
+import { srcSet, bgUrl } from "../lib/img";
 
 export default function FlavorPage() {
   const { slug = "" } = useParams<{ slug: string }>();
@@ -41,7 +42,7 @@ export default function FlavorPage() {
   return (
     <div ref={root} className="fv" key={f.slug} style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2 }}>
       <section className="fv-hero">
-        <div className="fv-bg" aria-hidden><img src={f.art} alt="" /></div>
+        <div className="fv-bg" aria-hidden><img src={bgUrl(f.art)} alt="" /></div>
         <h1 className="fv-word" aria-label={f.name}>
           {words.map((w, k) => (
             <span className="fv-line" key={k} aria-hidden>
@@ -77,11 +78,11 @@ export default function FlavorPage() {
 
       <section className="fv-displays wrap sf-displays">
         <Tilt max={6} className="sf-disp">
-          <img src={f.disp} alt={`${f.name} pre-roll 20-pack display`} loading="lazy" />
+          <img src={f.disp} srcSet={srcSet(f.disp)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} pre-roll 20-pack display`} loading="lazy" />
           <span>Pre-Roll · 20-pack display</span>
         </Tilt>
         <Tilt max={6} className="sf-disp">
-          <img src={f.box} alt={`${f.name} dabs display`} loading="lazy" />
+          <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} dabs display`} loading="lazy" />
           <span>Dabs · display box</span>
         </Tilt>
       </section>

@@ -4,6 +4,7 @@ import Lenis from "lenis";
 import { reducedMotion } from "./theme";
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 export let lenis: Lenis | null = null;
 export const scrollState = { velocity: 0 };

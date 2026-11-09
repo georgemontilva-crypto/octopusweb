@@ -3,6 +3,7 @@ import { LINES } from "../data";
 import { InkLink } from "../components/Transition";
 import { gsap, scrollToEl } from "../lib/motion";
 import { isTouch } from "../lib/theme";
+import { smUrl } from "../lib/img";
 
 /** Editorial index of OCTOPUS product lines. Hovering a row floats its image next to the cursor. */
 export default function LinesIndex() {
@@ -51,7 +52,7 @@ export default function LinesIndex() {
           <li key={l.id}>
             <button className="li-row" onClick={() => scrollToEl("#currents")} onPointerEnter={() => show(l.image)} onPointerLeave={() => show(null)}>
               <em>{String(k + 1).padStart(2, "0")}</em>
-              <img src={l.image} alt="" className="li-thumb" loading="lazy" />
+              <img src={smUrl(l.image)} alt="" className="li-thumb" loading="lazy" />
               <b>{l.name}</b>
               <span className="li-meta">{l.formats.join(" · ")} · {l.flavors} flavors</span>
               <span className="li-status">Available</span>

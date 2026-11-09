@@ -8,7 +8,9 @@ export function Tilt({ children, className = "", max = 14, style }: { children: 
   useEffect(() => {
     const el = ref.current!;
     const touch = isTouch();
-    let rx = 0, ry = 0, tx = 0, ty = 0, raf = 0, inside = false;
+    let rx = 0, ry = 0, tx = 0, ty = 0, raf = 0, inside = false, onScreen = false;
+    const io = new IntersectionObserver(([e]) => (onScreen = e.isIntersecting));
+    io.observe(el);
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
@@ -21,6 +23,7 @@ export function Tilt({ children, className = "", max = 14, style }: { children: 
     };
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
+      if (!onScreen) return;
       if (touch || !inside) {
         ty = Math.sin(now / 1400) * max * 0.6;
         tx = Math.cos(now / 1700) * max * 0.3;
@@ -33,6 +36,7 @@ export function Tilt({ children, className = "", max = 14, style }: { children: 
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener("pointermove", onMove);
     };
   }, [max]);

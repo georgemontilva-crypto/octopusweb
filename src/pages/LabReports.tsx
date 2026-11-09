@@ -5,6 +5,7 @@ import { gsap, ScrollTrigger } from "../lib/motion";
 import { resetTint } from "../lib/theme";
 import { useSeo } from "../lib/seo";
 import { useEntered } from "../App";
+import { smUrl } from "../lib/img";
 
 export default function LabReports() {
   useSeo("Lab Results · OCTOPUS", "Lab results for OCTOPUS products, by line and flavor.");
@@ -35,7 +36,7 @@ export default function LabReports() {
       <div className="lr-grid">
         {FLAVORS.map((f) => (
           <article key={f.slug} className="lr-card" style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2 }}>
-            <div className="lr-art"><img src={f.art} alt="" loading="lazy" /></div>
+            <div className="lr-art"><img src={smUrl(f.art)} alt="" loading="lazy" /></div>
             <img src={f.tube} alt="" className="lr-tube" loading="lazy" />
             <div className="lr-body">
               <h2>{f.name}</h2>

@@ -57,6 +57,10 @@ export default function Cursor() {
         parts.push({ x: e.clientX, y: e.clientY, r: 4 + Math.random() * 14, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, ink: true, hue: Math.random() });
       }
       ring.current?.classList.add("is-down");
+      if (idle) {
+        idle = false;
+        raf = requestAnimationFrame(loop);
+      }
     };
     const onUp = () => ring.current?.classList.remove("is-down");
     window.addEventListener("pointermove", onMove, { passive: true });
@@ -64,7 +68,13 @@ export default function Cursor() {
     window.addEventListener("pointerup", onUp);
 
     let raf = 0;
+    let idle = false;
     const loop = () => {
+      if (touch && parts.length === 0) {
+        ctx.clearRect(0, 0, W, H);
+        idle = true;
+        return;
+      }
       raf = requestAnimationFrame(loop);
       m.rx += (m.x - m.rx) * 0.16;
       m.ry += (m.y - m.ry) * 0.16;

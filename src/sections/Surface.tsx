@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { InkLink } from "../components/Transition";
 import { Tilt } from "../components/Fx";
 import { gsap } from "../lib/motion";
+import { srcSet } from "../lib/img";
 
 /** Retail displays + the two closing paths (lab results / wholesale). */
 export default function Surface() {
@@ -21,11 +22,11 @@ export default function Surface() {
       </header>
       <div className="sf-displays wrap">
         <Tilt max={7} className="sf-disp">
-          <img src="/img/p/purple-paradise-disp.webp" alt="OCTOPUS Blue Lotus pre-roll 20-pack display" loading="lazy" />
+          <img src="/img/p/purple-paradise-disp.webp" srcSet={srcSet("/img/p/purple-paradise-disp.webp")} sizes="(max-width: 760px) 90vw, 45vw" alt="OCTOPUS Blue Lotus pre-roll 20-pack display" loading="lazy" />
           <span>Pre-Roll · 20-pack display</span>
         </Tilt>
         <Tilt max={7} className="sf-disp">
-          <img src="/img/p/lineup-blue.webp" alt="OCTOPUS Blue Lotus dabs 6-flavor display" loading="lazy" />
+          <img src="/img/p/lineup-blue.webp" srcSet={srcSet("/img/p/lineup-blue.webp", 560, 1300)} sizes="(max-width: 760px) 90vw, 45vw" alt="OCTOPUS Blue Lotus dabs 6-flavor display" loading="lazy" />
           <span>Dabs · 6-flavor display</span>
         </Tilt>
       </div>
