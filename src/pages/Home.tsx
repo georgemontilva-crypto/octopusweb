@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import Hero from "../sections/Hero";
-import Lines from "../sections/Lines";
-import Showroom from "../sections/Showroom";
-import FlavorGrid from "../sections/FlavorGrid";
-import { Counter, LabStrip } from "../sections/Counter";
+import Dive from "../sections/Dive";
+import Currents from "../sections/Currents";
+import LinesIndex from "../sections/LinesIndex";
+import Surface from "../sections/Surface";
 import { pending } from "../components/Nav";
 import { resetTint } from "../lib/theme";
 import { ScrollTrigger, scrollToEl } from "../lib/motion";
@@ -25,12 +24,10 @@ export default function Home() {
 
   return (
     <>
-      <Hero />
-      <Lines />
-      <Showroom />
-      <FlavorGrid />
-      <Counter />
-      <LabStrip />
+      <Dive />
+      <Currents />
+      <LinesIndex />
+      <Surface />
     </>
   );
 }
