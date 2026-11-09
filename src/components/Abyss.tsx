@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { theme, isTouch, reducedMotion } from "../lib/theme";
+import { isScrolling } from "../lib/motion";
 
 const VERT = `
 attribute vec2 aPos;
@@ -185,9 +186,13 @@ export default function Abyss() {
     const start = performance.now();
     let last = start;
 
+    let lastDraw = 0;
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
       if (!running) return;
+      // phones: 30fps and no redraw while the finger is scrolling
+      if (touch && (now - lastDraw < 32 || isScrolling())) return;
+      lastDraw = now;
       const rawDt = (now - last) / 1000;
       const dt = Math.min(rawDt, 0.05);
       last = now;
@@ -196,7 +201,7 @@ export default function Abyss() {
         acc += rawDt;
         frames++;
         if (frames >= 40) {
-          slowWins = acc / frames > 1 / 38 ? slowWins + 1 : 0;
+          slowWins = acc / frames > (touch ? 1 / 22 : 1 / 38) ? slowWins + 1 : 0;
           if (slowWins >= 2 && qi < scales.length - 1) {
             scale = scales[++qi];
             slowWins = 0;

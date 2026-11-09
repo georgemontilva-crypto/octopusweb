@@ -7,8 +7,7 @@ import { FLAVORS } from "../data";
 export const pending = { hash: "" };
 
 const LINKS = [
-  { label: "Blue Lotus", hash: "#currents" },
-  { label: "Lines", hash: "#lines" },
+  { label: "Products", hash: "#products" },
 ];
 
 export default function Nav() {

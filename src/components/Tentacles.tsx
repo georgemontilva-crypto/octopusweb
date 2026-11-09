@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { isTouch, reducedMotion } from "../lib/theme";
+import { isScrolling } from "../lib/motion";
 
 type V = { x: number; y: number };
 
@@ -239,6 +240,7 @@ export default function Tentacles({ active = true }: { active?: boolean }) {
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
       if (!visible || document.hidden) return;
+      if (touch && isScrolling()) return;
       if (activeRef.current) {
         if (!started) started = now;
         grow = Math.min(1, (now - started) / 1800);

@@ -2,27 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import type { Kind } from "./stage";
 import type { Flavor } from "../data";
 import { srcSet } from "../lib/img";
+import { isTouch } from "../lib/theme";
 
 type Props = {
   flavor: Flavor;
   kind: Kind;
   className?: string;
-  drag?: boolean;
   fill?: number;
   sway?: number;
   yaw?: number;
   phase?: number;
+  spin?: boolean;
   label?: string;
 };
 
 /** Start downloading the 3D engine early (e.g. while the intro is on screen). */
 export const preload3D = () => import("./stage");
 
-/** A DOM slot where the shared WebGL stage renders a real 3D product. Falls back to the photo. */
-export default function Product3D({ flavor, kind, className = "", drag = true, fill, sway, yaw, phase, label }: Props) {
+/** In-page slot: the 3D engine paints a real 3D product into a canvas inside this element. */
+export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
-  // Royal Haze has no tall-box photo: fall back to the display-box photo for dabs
+  // Royal Haze has no tall-box photo: dabs fall back to the display-box photo
   const has3D = kind === "tube" || !!flavor.tex.front;
 
   useEffect(() => {
@@ -32,13 +33,12 @@ export default function Product3D({ flavor, kind, className = "", drag = true, f
     preload3D().then(({ stage }) => {
       if (dead || !ref.current) return;
       off = stage.add(ref.current, {
-        slug: flavor.slug,
         kind,
         color: flavor.color,
         tex: flavor.tex,
-        drag,
         fill,
         sway,
+        spin,
         yaw: yaw ?? (kind === "box" ? -0.5 : 0),
         phase,
       });
@@ -48,18 +48,19 @@ export default function Product3D({ flavor, kind, className = "", drag = true, f
       dead = true;
       off?.();
     };
-  }, [flavor, kind, drag, fill, sway, yaw, phase, has3D]);
+  }, [flavor, kind, fill, sway, yaw, phase, spin, has3D]);
 
   const photo = !has3D ? flavor.box : failed ? (kind === "tube" ? flavor.tube : flavor.tall) : null;
+  const canDrag = has3D && !failed && !isTouch();
   return (
     <div
       ref={ref}
-      className={"p3d " + (drag && has3D && !failed ? "is-drag " : "") + className}
+      className={"p3d " + (canDrag ? "is-drag " : "") + className}
       role="img"
       aria-label={label ?? `${flavor.name} ${kind === "tube" ? "Pre-Roll 2G" : "Dabs 2.5G"}`}
-      data-cursor={drag && has3D && !failed ? "DRAG" : undefined}
+      data-cursor={canDrag ? "DRAG" : undefined}
     >
-      {photo && <img src={photo} srcSet={srcSet(photo)} sizes="(max-width: 900px) 70vw, 30vw" alt="" className="p3d-fallback" draggable={false} />}
+      {photo && <img src={photo} srcSet={srcSet(photo)} sizes="(max-width: 900px) 60vw, 25vw" alt="" className="p3d-fallback" draggable={false} />}
     </div>
   );
 }

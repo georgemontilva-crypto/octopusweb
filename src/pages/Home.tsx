@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import Dive from "../sections/Dive";
-import Currents from "../sections/Currents";
-import LinesIndex from "../sections/LinesIndex";
-import Surface from "../sections/Surface";
+import Porthole from "../sections/Porthole";
+import Aquarium from "../sections/Aquarium";
+import Retail from "../sections/Retail";
 import { pending } from "../components/Nav";
 import { resetTint } from "../lib/theme";
 import { ScrollTrigger, scrollToEl } from "../lib/motion";
@@ -21,13 +20,11 @@ export default function Home() {
     }, 350);
     return () => clearTimeout(t);
   }, []);
-
   return (
     <>
-      <Dive />
-      <Currents />
-      <LinesIndex />
-      <Surface />
+      <Porthole />
+      <Aquarium />
+      <Retail />
     </>
   );
 }

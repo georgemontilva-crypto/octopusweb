@@ -6,7 +6,6 @@ import Intro from "./components/Intro";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import { InkOverlay } from "./components/Transition";
-import { initSmoothScroll } from "./lib/motion";
 import Home from "./pages/Home";
 import FlavorPage from "./pages/FlavorPage";
 import LabReports from "./pages/LabReports";
@@ -20,7 +19,6 @@ export default function App() {
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    initSmoothScroll();
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   }, []);
 

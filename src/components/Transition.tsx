@@ -24,7 +24,7 @@ export function InkOverlay() {
 export function goTo(href: string, x = window.innerWidth / 2, y = window.innerHeight / 2, color = "#7b3cff") {
   if (busy || !overlayEl || !nav) return;
   if (href === window.location.pathname) {
-    scrollToTop(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
   busy = true;
@@ -40,7 +40,7 @@ export function goTo(href: string, x = window.innerWidth / 2, y = window.innerHe
     .to(logo, { scale: 1, opacity: 1, rotate: 0, duration: 0.45, ease: "back.out(2)" }, "-=0.2")
     .add(() => {
       nav!(href);
-      scrollToTop(true);
+      scrollToTop();
     })
     .add(() => ScrollTrigger.refresh(), "+=0.15")
     .to(logo, { scale: 1.4, opacity: 0, duration: 0.35, ease: "power2.in" }, "+=0.1")
