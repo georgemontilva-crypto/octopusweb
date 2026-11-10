@@ -7,18 +7,14 @@ type V = { x: number; y: number };
 type Spec = { bx: number; by: number; ang: number; reach: number; width: number; phase: number };
 
 const DESKTOP: Spec[] = [
-  { bx: -0.04, by: 1.06, ang: -55, reach: 0.62, width: 1.0, phase: 0 },
-  { bx: 1.04, by: 1.06, ang: -125, reach: 0.62, width: 1.0, phase: 1.7 },
-  { bx: -0.06, by: 0.42, ang: 10, reach: 0.42, width: 0.75, phase: 3.1 },
-  { bx: 1.06, by: 0.36, ang: 170, reach: 0.42, width: 0.75, phase: 4.4 },
-  { bx: 0.24, by: 1.1, ang: -80, reach: 0.4, width: 0.7, phase: 2.3 },
-  { bx: 0.78, by: 1.1, ang: -100, reach: 0.4, width: 0.7, phase: 5.2 },
+  { bx: -0.05, by: 1.06, ang: -50, reach: 0.34, width: 0.6, phase: 0 },
+  { bx: 1.05, by: 1.06, ang: -130, reach: 0.34, width: 0.6, phase: 1.7 },
+  { bx: -0.06, by: 0.5, ang: 8, reach: 0.22, width: 0.45, phase: 3.1 },
+  { bx: 1.06, by: 0.44, ang: 172, reach: 0.22, width: 0.45, phase: 4.4 },
 ];
 const MOBILE: Spec[] = [
-  { bx: -0.08, by: 1.04, ang: -60, reach: 0.7, width: 0.85, phase: 0 },
-  { bx: 1.08, by: 1.04, ang: -120, reach: 0.7, width: 0.85, phase: 1.7 },
-  { bx: -0.1, by: 0.3, ang: 15, reach: 0.45, width: 0.6, phase: 3.1 },
-  { bx: 1.1, by: 0.26, ang: 165, reach: 0.45, width: 0.6, phase: 4.4 },
+  { bx: -0.08, by: 1.04, ang: -60, reach: 0.4, width: 0.55, phase: 0 },
+  { bx: 1.08, by: 1.04, ang: -120, reach: 0.4, width: 0.55, phase: 1.7 },
 ];
 
 const SEGS = 28;
@@ -48,27 +44,15 @@ class Tentacle {
     }));
     this.tip = { ...this.pts[SEGS - 1] };
   }
-  update(t: number, mouse: V | null, grow: number) {
+  update(t: number, _mouse: V | null, grow: number) {
     const { base, dir, reachPx, s } = this;
     const reach = reachPx * grow;
     // idle target: curling sway
-    const sway = Math.sin(t * 0.7 + s.phase) * 0.55 + Math.sin(t * 0.31 + s.phase * 2) * 0.3;
+    const sway = Math.sin(t * 0.35 + s.phase) * 0.22 + Math.sin(t * 0.17 + s.phase * 2) * 0.1;
     const a = dir + sway;
     const idleR = reach * (0.72 + 0.12 * Math.sin(t * 0.9 + s.phase));
     let tx = base.x + Math.cos(a) * idleR;
     let ty = base.y + Math.sin(a) * idleR;
-    if (mouse && grow > 0.95) {
-      const dx = mouse.x - base.x, dy = mouse.y - base.y;
-      const d = Math.hypot(dx, dy);
-      if (d < reach * 1.35) {
-        const k = Math.min(1, d / (reach * 0.98));
-        // reach toward the cursor but stop just short (it "hunts" you)
-        tx = base.x + (dx / (d || 1)) * Math.min(d - 30, reach * 0.97) * 1;
-        ty = base.y + (dy / (d || 1)) * Math.min(d - 30, reach * 0.97) * 1;
-        tx += Math.sin(t * 3 + s.phase) * 12 * k;
-        ty += Math.cos(t * 2.6 + s.phase) * 12 * k;
-      }
-    }
     if (this.recoil > 0) {
       const r = this.recoil;
       tx = tx + (base.x + Math.cos(dir) * reach * 0.3 - tx) * r;
@@ -225,7 +209,7 @@ export default function Tentacles({ active = true }: { active?: boolean }) {
       mouse = { x: e.clientX - r.left, y: e.clientY - r.top };
     };
     const onLeave = () => (mouse = null);
-    const onDown = () => ts.forEach((t) => (t.recoil = 1));
+    const onDown = () => {};
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerdown", onDown);
     document.addEventListener("pointerleave", onLeave);
@@ -251,7 +235,7 @@ export default function Tentacles({ active = true }: { active?: boolean }) {
       if (e <= 0.001) return;
       for (const tn of ts) {
         tn.update(t, mouse, e);
-        tn.draw(ctx, t, !touch);
+        tn.draw(ctx, t, false);
       }
     };
     raf = requestAnimationFrame(loop);

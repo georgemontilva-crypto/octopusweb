@@ -1,16 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { InkLink } from "../components/Transition";
-import { gsap } from "../lib/motion";
 import { srcSet } from "../lib/img";
 
 export default function Retail() {
   const root = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".rt-card, .rt-tile", { y: 40, opacity: 0, stagger: 0.08, duration: 0.9, ease: "power3.out", scrollTrigger: { trigger: root.current, start: "top 80%" } });
-    }, root.current!);
-    return () => ctx.revert();
-  }, []);
   return (
     <section ref={root} className="rt">
       <header className="wrap rt-head">
@@ -28,7 +21,7 @@ export default function Retail() {
         </figure>
       </div>
       <div className="rt-tiles wrap">
-        <InkLink href="/contact" className="rt-tile rt-tile-a" cursor="LET'S TALK">
+        <InkLink href="/contact?type=Wholesale" className="rt-tile rt-tile-a">
           <span>Wholesale</span>
           <b>Carry OCTOPUS →</b>
         </InkLink>

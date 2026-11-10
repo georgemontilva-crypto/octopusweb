@@ -56,19 +56,19 @@ void main(){
   // tinted nebula / ink clouds
   vec2 q = p * 2.0 + vec2(0.0, t * 0.025);
   float n = fbm(q + fbm(p * 3.0 - t * 0.02) * 1.4);
-  col += uA * pow(n, 3.0) * 0.6;
-  col += uB * pow(fbm(p * 1.5 - vec2(t * 0.018, -t*0.01)), 4.0) * 0.5;
+  col += uA * pow(n, 3.0) * 0.45;
+  col += uB * pow(fbm(p * 1.5 - vec2(t * 0.018, -t*0.01)), 4.0) * 0.3;
 
   // god rays
   float ang = (uv.x - 0.5 - (uMouse.x - 0.5) * 0.18) / (1.3 - uv.y);
   float rays = pow(max(0.0, sin(ang * 9.0 + t * 0.3)), 6.0);
   rays += pow(max(0.0, sin(ang * 15.0 - t * 0.22 + 1.3)), 8.0) * 0.7;
   rays *= smoothstep(0.1, 1.0, uv.y) * (0.2 + 0.8 * surface);
-  col += mix(vec3(0.65, 0.8, 1.0), uA, 0.45) * rays * 0.16;
+  col += mix(vec3(0.65, 0.8, 1.0), uA, 0.45) * rays * 0.09;
 
   // caustics
   float c = caustic(p * 0.55 + vec2(0.0, t * 0.01), t * 0.35);
-  col += mix(uA, vec3(1.0), 0.45) * c * 0.1 * smoothstep(0.3, 1.0, uv.y) * surface;
+  col += mix(uA, vec3(1.0), 0.45) * c * 0.04 * smoothstep(0.3, 1.0, uv.y) * surface;
 
   // bioluminescent motes (rising)
   for(int L=0; L<3; L++){
@@ -78,11 +78,11 @@ void main(){
     vec2 id = floor(g);
     vec2 f = fract(g) - 0.5;
     float h = hash(id + fl * 7.13);
-    if(h > 0.85){
+    if(h > 0.95){
       vec2 o = vec2(hash(id + 1.3) - 0.5, hash(id + 2.1) - 0.5) * 0.6;
       float d = length(f - o);
       float tw = 0.5 + 0.5 * sin(t * 2.0 + h * 40.0);
-      col += mix(uA, uB, hash(id + 3.0)) * smoothstep(0.11, 0.0, d) * tw * (0.7 - fl * 0.18);
+      col += mix(uA, uB, hash(id + 3.0)) * smoothstep(0.1, 0.0, d) * tw * (0.35 - fl * 0.08);
     }
   }
 
@@ -92,27 +92,16 @@ void main(){
     vec2 id = floor(g);
     vec2 f = fract(g) - 0.5;
     float h = hash(id + 11.0);
-    if(h > 0.78){
+    if(h > 0.94){
       f.x += sin(t * 1.6 + h * 30.0) * 0.12;
       float rad = 0.05 + 0.13 * hash(id + 5.0);
       float d = length(f);
       float ring = smoothstep(0.022, 0.0, abs(d - rad));
       float hl = smoothstep(rad * 0.45, 0.0, length(f - vec2(-rad * 0.38, rad * 0.38)));
-      col += (ring * 0.28 + hl * 0.3) * mix(vec3(0.8, 0.9, 1.0), uA, 0.35);
+      col += (ring * 0.14 + hl * 0.14) * mix(vec3(0.8, 0.9, 1.0), uA, 0.35);
     }
   }
 
-  // cursor bioluminescence
-  vec2 m = vec2((uMouse.x - 0.5) * asp, uMouse.y);
-  vec2 dm = p - m;
-  col += mix(uA, uB, 0.3) * 0.14 / (1.0 + 26.0 * dot(dm, dm));
-
-  // ink pulse shockwave
-  vec2 pp = vec2((uPulsePos.x - 0.5) * asp, uPulsePos.y);
-  float r = (1.0 - uPulse) * 1.3;
-  float dd = length(p - pp);
-  col += uB * smoothstep(0.07, 0.0, abs(dd - r)) * uPulse * 0.9;
-  col += uA * smoothstep(0.2, 0.0, abs(dd - r * 0.7)) * uPulse * 0.35;
 
   // vignette + grain
   vec2 v = uv - 0.5;
@@ -211,7 +200,7 @@ export default function Abyss() {
           frames = 0;
         }
       }
-      const t = ((now - start) / 1000) * (slow ? 0.15 : 1);
+      const t = ((now - start) / 1000) * (slow ? 0.15 : 0.6);
       mouse.x += (mouse.tx - mouse.x) * 0.06;
       mouse.y += (mouse.ty - mouse.y) * 0.06;
       const max = document.documentElement.scrollHeight - window.innerHeight;

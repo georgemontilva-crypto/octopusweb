@@ -251,10 +251,8 @@ class Stage {
       g.rotation.x = s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
       g.rotation.z = Math.sin(t * 0.5 + ph) * 0.025;
       g.position.y = Math.sin(t * 1.1 + ph) * 0.02;
-      const k = Math.min(1, (now - s.born) / 900);
-      const pop = k >= 1 ? 1 : 1 + 2.2 * Math.pow(k - 1, 3) + 1.2 * Math.pow(k - 1, 2);
-      g.scale.setScalar(Math.max(0.001, pop));
-      if (k < 1) g.rotation.y += (1 - k) * (1 - k) * 2.4;
+      const k = Math.min(1, (now - s.born) / 280);
+      g.scale.setScalar(0.92 + 0.08 * (1 - Math.pow(1 - k, 3)));
 
       const aspect = s.w / s.h;
       const fill = o.fill ?? 0.84;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { gsap, ScrollTrigger } from "../lib/motion";
+import { ScrollTrigger } from "../lib/motion";
 import { inkPulse, resetTint } from "../lib/theme";
 import { useSeo } from "../lib/seo";
 import { useEntered } from "../App";
@@ -10,19 +10,16 @@ export default function Contact() {
   useSeo("Contact & Wholesale · OCTOPUS", "Get in touch with OCTOPUS — wholesale, distribution and general questions.");
   const root = useRef<HTMLDivElement>(null);
   const entered = useEntered();
-  const [type, setType] = useState("Wholesale");
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get("product") || "";
+  const [type, setType] = useState(["Wholesale", "Distribution", "General"].includes(params.get("type") || "") ? params.get("type")! : "Wholesale");
   const [status, setStatus] = useState<Status>("idle");
   const [err, setErr] = useState("");
 
   useEffect(() => {
     resetTint();
     if (!entered) return;
-    const ctx = gsap.context(() => {
-      gsap.from(".page-title .ln", { yPercent: 110, stagger: 0.1, duration: 1.2, ease: "expo.out", delay: 0.2 });
-      gsap.from(".ct-form > *", { y: 40, opacity: 0, stagger: 0.06, duration: 0.9, ease: "expo.out", delay: 0.4 });
-    }, root.current!);
     setTimeout(() => ScrollTrigger.refresh(), 200);
-    return () => ctx.revert();
   }, [entered]);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
@@ -80,7 +77,7 @@ export default function Contact() {
               <label className="field"><input name="location" placeholder=" " maxLength={160} /><span>City / State</span></label>
             </>
           )}
-          <label className="field field-area"><textarea name="message" required placeholder=" " rows={5} maxLength={3000} /><span>Message</span></label>
+          <label className="field field-area"><textarea name="message" required placeholder=" " rows={5} maxLength={3000} defaultValue={product ? `I am interested in carrying ${product}.` : ""} /><span>Message</span></label>
           <input name="website" className="hp" tabIndex={-1} autoComplete="off" aria-hidden />
           <label className="ct-check"><input type="checkbox" required /> <span>I confirm I am 21 years of age or older.</span></label>
           {status === "error" && <p className="ct-err">{err}</p>}

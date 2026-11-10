@@ -3,7 +3,7 @@ import { useParams } from "wouter";
 import { FLAVORS, flavorBySlug } from "../data";
 import { InkLink } from "../components/Transition";
 import Product3D from "../three/Product3D";
-import { gsap, ScrollTrigger } from "../lib/motion";
+import { ScrollTrigger } from "../lib/motion";
 import { setTint } from "../lib/theme";
 import { srcSet } from "../lib/img";
 import { useSeo } from "../lib/seo";
@@ -20,14 +20,8 @@ export default function FlavorPage() {
   useEffect(() => {
     if (!f || !entered) return;
     setTint(f.color, f.color2);
-    const ctx = gsap.context(() => {
-      gsap.from(".fp-fade", { y: 30, opacity: 0, stagger: 0.07, duration: 0.9, ease: "power3.out", delay: 0.15 });
-    }, root.current!);
     const t = setTimeout(() => ScrollTrigger.refresh(), 250);
-    return () => {
-      clearTimeout(t);
-      ctx.revert();
-    };
+    return () => clearTimeout(t);
   }, [f, entered]);
 
   if (!f) return <NotFound />;
@@ -38,7 +32,6 @@ export default function FlavorPage() {
       <section className="fp-top wrap">
         <div className="fp-tank fp-fade">
           <span className="tank-water" />
-          <span className="tank-bubbles" aria-hidden><i /><i /><i /><i /></span>
           <div className="fp-duo">
             <figure>
               <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="fp-p" fill={0.86} />
@@ -63,6 +56,10 @@ export default function FlavorPage() {
             <div><dt>Pre-Roll</dt><dd>2G</dd></div>
             <div><dt>Dabs</dt><dd>2.5G</dd></div>
           </dl>
+          <div className="fp-ctas">
+            <InkLink href={`/contact?type=Wholesale&product=${encodeURIComponent("Blue Lotus " + f.name)}`} className="btn btn-glow">Wholesale inquiry</InkLink>
+            <InkLink href="/lab-reports" className="btn btn-ghost">Lab results</InkLink>
+          </div>
         </div>
       </section>
 

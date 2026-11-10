@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { FLAVORS } from "../data";
 import { InkLink } from "../components/Transition";
-import { gsap, ScrollTrigger } from "../lib/motion";
+import { ScrollTrigger } from "../lib/motion";
 import { resetTint } from "../lib/theme";
 import { useSeo } from "../lib/seo";
 import { useEntered } from "../App";
@@ -14,12 +14,7 @@ export default function LabReports() {
   useEffect(() => {
     resetTint();
     if (!entered) return;
-    const ctx = gsap.context(() => {
-      gsap.from(".page-title .ln", { yPercent: 110, stagger: 0.1, duration: 1.2, ease: "expo.out", delay: 0.2 });
-      gsap.from(".lr-card", { y: 80, opacity: 0, stagger: 0.08, duration: 1, ease: "expo.out", delay: 0.4 });
-    }, root.current!);
     setTimeout(() => ScrollTrigger.refresh(), 200);
-    return () => ctx.revert();
   }, [entered]);
 
   return (

@@ -49,7 +49,7 @@ export default function Nav() {
     if (loc === "/") scrollToEl(hash);
     else {
       pending.hash = hash;
-      goTo("/", e.clientX, e.clientY);
+      goTo("/");
     }
   };
 
@@ -66,7 +66,8 @@ export default function Nav() {
             </a>
           ))}
           <InkLink href="/lab-reports" className="nav-link"><span data-text="Lab Results">Lab Results</span></InkLink>
-          <InkLink href="/contact" className="nav-link nav-cta" cursor="HELLO">Contact</InkLink>
+          <InkLink href="/contact" className="nav-link"><span data-text="Contact">Contact</span></InkLink>
+          <InkLink href="/contact?type=Wholesale" className="nav-link nav-cta">Wholesale inquiry</InkLink>
         </nav>
         <div className="nav-depth" aria-hidden>
           <i />DEPTH <span ref={depthRef}>00000</span>m
@@ -85,6 +86,7 @@ export default function Nav() {
           ))}
           <div className="menu-mask"><InkLink href="/lab-reports" className="menu-item" onClick={() => setOpen(false)}>Lab Results</InkLink></div>
           <div className="menu-mask"><InkLink href="/contact" className="menu-item" onClick={() => setOpen(false)}>Contact</InkLink></div>
+          <div className="menu-mask"><InkLink href="/contact?type=Wholesale" className="menu-item menu-item-cta" onClick={() => setOpen(false)}>Wholesale</InkLink></div>
           <p className="menu-sub">Blue Lotus flavors</p>
           <div className="menu-flavors">
             {FLAVORS.map((f) => (

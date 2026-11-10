@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Route, Switch } from "wouter";
 import Abyss from "./components/Abyss";
-import Cursor from "./components/Cursor";
 import Intro from "./components/Intro";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import { InkOverlay } from "./components/Transition";
+import { NavBridge } from "./components/Transition";
+import { storage } from "./lib/theme";
 import Home from "./pages/Home";
 import FlavorPage from "./pages/FlavorPage";
 import LabReports from "./pages/LabReports";
@@ -16,7 +16,7 @@ const EnteredCtx = createContext(false);
 export const useEntered = () => useContext(EnteredCtx);
 
 export default function App() {
-  const [entered, setEntered] = useState(false);
+  const [entered, setEntered] = useState(() => storage.get("octopus_21_ok") === "1");
 
   useEffect(() => {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -37,8 +37,7 @@ export default function App() {
         </Switch>
       </main>
       <Footer />
-      <InkOverlay />
-      <Cursor />
+      <NavBridge />
       {!entered && <Intro onDone={() => setEntered(true)} />}
     </EnteredCtx.Provider>
   );
