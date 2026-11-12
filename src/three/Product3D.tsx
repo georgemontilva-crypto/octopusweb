@@ -15,6 +15,7 @@ type Props = {
   spin?: boolean;
   label?: string;
   pop?: boolean;
+  tentacles?: boolean;
   ctrl?: Ctrl;
   live?: boolean;
 };
@@ -23,7 +24,7 @@ type Props = {
 export const preload3D = () => import("./stage");
 
 /** In-page slot: the 3D engine paints a real 3D product into a canvas inside this element. */
-export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label, pop, ctrl, live }: Props) {
+export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label, pop, tentacles, ctrl, live }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   // dabs fall back to the display-box photo if a flavor has no box textures
@@ -45,6 +46,7 @@ export default function Product3D({ flavor, kind, className = "", fill, sway, ya
         yaw: yaw ?? (kind === "tube" ? 0 : -0.5),
         phase,
         pop,
+        tentacles,
         ctrl,
         live,
       });
@@ -54,7 +56,7 @@ export default function Product3D({ flavor, kind, className = "", fill, sway, ya
       dead = true;
       off?.();
     };
-  }, [flavor, kind, fill, sway, yaw, phase, spin, has3D, pop, ctrl, live]);
+  }, [flavor, kind, fill, sway, yaw, phase, spin, has3D, pop, tentacles, ctrl, live]);
 
   const photo = !has3D ? flavor.box : failed ? (kind === "tube" ? flavor.tube : kind === "cube" ? flavor.box : flavor.tall) : null;
   const canDrag = has3D && !failed && !isTouch() && !ctrl;

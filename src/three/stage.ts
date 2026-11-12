@@ -5,6 +5,7 @@
  * nothing intercepts touch, and rendering pauses while the user scrolls.
  */
 import * as THREE from "three";
+import { Tentacles } from "./tentacles";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { isTouch, reducedMotion } from "../lib/theme";
 import { small, smUrl } from "../lib/img";
@@ -23,6 +24,8 @@ export type SlotOpts = {
   spin?: boolean;
   /** tube with a separate cap and a pre-roll inside (for the "pop the top" scene) */
   pop?: boolean;
+  /** 3D octopus tentacles wrapped around the tube (pop scene) */
+  tentacles?: boolean;
   /** external control (viewer / scroll scenes). Read every frame. */
   ctrl?: Ctrl;
   /** keep rendering while the page scrolls (sticky scenes) */
@@ -208,24 +211,46 @@ class Stage {
     cap.position.y = TUBE_H / 2 - capH / 2;
     cap.userData.y0 = cap.position.y;
 
-    // pre-roll: cardboard crutch + paper cone with a twisted tip
+    // pre-roll: kraft filter + translucent tan cone paper, wide packed open end (like a classic cone)
     const L = TUBE_H * 0.86;
-    const R = TUBE_R * 0.86;
+    const R = TUBE_R * 0.84;
     const pre = new THREE.Group();
     pre.name = "preroll";
-    const crutch = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.6, R * 0.6, L * 0.2, 32), new THREE.MeshStandardMaterial({ color: 0xd9b98a, roughness: 0.9 }));
-    crutch.position.y = -L / 2 + L * 0.1;
+    const fl = L * 0.22, r0 = R * 0.46, r1 = R * 0.5;
+    const crutch = new THREE.Mesh(
+      new THREE.CylinderGeometry(r1, r0, fl, 40, 1, true),
+      new THREE.MeshStandardMaterial({ map: kraftTex(), color: 0xdcd2c4, roughness: 0.92, envMapIntensity: 0.3 }),
+    );
+    crutch.position.y = -L / 2 + fl / 2;
+    const fEnd = new THREE.Mesh(new THREE.RingGeometry(r0 * 0.35, r0, 32), new THREE.MeshStandardMaterial({ color: 0xc99a68, roughness: 1, side: THREE.DoubleSide }));
+    fEnd.rotation.x = Math.PI / 2;
+    fEnd.position.y = -L / 2;
     const pts: THREE.Vector2[] = [];
-    const steps = 18;
+    const steps = 24;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
-      const y = -L / 2 + L * 0.2 + t * L * 0.72;
-      pts.push(new THREE.Vector2(R * (0.62 + 0.38 * t), y));
+      // slight bulge where it is packed, straight cone otherwise
+      const rr = r0 + (R - r0) * t + Math.sin(t * Math.PI) * R * 0.03;
+      pts.push(new THREE.Vector2(rr, -L / 2 + fl * 0.92 + t * (L - fl * 0.92)));
     }
-    pts.push(new THREE.Vector2(R * 0.55, L / 2 - L * 0.03));
-    pts.push(new THREE.Vector2(R * 0.12, L / 2));
-    const paper = new THREE.Mesh(new THREE.LatheGeometry(pts, 40), new THREE.MeshStandardMaterial({ map: paperTex(), color: 0xffffff, roughness: 0.9 }));
-    pre.add(crutch, paper);
+    const paper = new THREE.Mesh(
+      new THREE.LatheGeometry(pts, 48),
+      new THREE.MeshStandardMaterial({ map: paperTex(), color: 0xbdb39c, roughness: 0.82, envMapIntensity: 0.3, side: THREE.DoubleSide }),
+    );
+    // packed herb visible at the open end
+    const top = new THREE.Mesh(new THREE.CircleGeometry(R * 0.98, 40), new THREE.MeshStandardMaterial({ map: herbTex(), roughness: 1 }));
+    top.rotation.x = -Math.PI / 2;
+    top.position.y = L / 2 - L * 0.006;
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(R * 0.99, R * 0.035, 8, 40), new THREE.MeshStandardMaterial({ color: 0xb8a272, roughness: 0.85 }));
+    lip.rotation.x = Math.PI / 2;
+    lip.position.y = L / 2;
+    pre.add(crutch, fEnd, paper, top, lip);
+    if (o.tentacles) {
+      const tt = new Tentacles(o.color, TUBE_R, this.touch);
+      tt.group.name = "tentacles";
+      tt.group.userData.t = tt;
+      g.add(tt.group);
+    }
     pre.position.y = -TUBE_H * 0.02;
     pre.userData.y0 = pre.position.y;
     g.add(tube, cap, pre);
@@ -362,6 +387,11 @@ class Stage {
           pre.rotation.y = t * 0.6 * d;
         }
         if (body) body.position.y = -d * 0.18;
+        const tg = g.getObjectByName("tentacles");
+        if (tg) {
+          tg.position.y = -d * 0.18;
+          (tg.userData.t as Tentacles).update(t, Math.min(1, (now - s.born) / 1400));
+        }
         extraH = a * 0.45 + b * 0.55;
       }
       g.rotation.z = Math.sin(t * 0.5 + ph) * 0.025;
@@ -372,7 +402,7 @@ class Stage {
       const aspect = s.w / s.h;
       const fill = o.fill ?? 0.84;
       const tan = Math.tan(((s.cam.fov * Math.PI) / 180) / 2);
-      const objW = o.kind === "tube" ? TUBE_R * 2.4 : o.kind === "cube" ? CUBE_W * 1.35 : BOX_W * 1.9;
+      const objW = o.kind === "tube" ? (o.tentacles ? 0.62 : TUBE_R * 2.4) : o.kind === "cube" ? CUBE_W * 1.35 : BOX_W * 1.9;
       const objH = (o.kind === "cube" ? CUBE_H * 1.75 : 1.08) + extraH;
       let dist = Math.max(objH / fill / 2 / tan, objW / fill / 2 / tan / aspect);
       if (c) dist /= c.zoom;
@@ -399,27 +429,86 @@ class Stage {
   };
 }
 
+function canvasTex(w: number, h: number, draw: (x: CanvasRenderingContext2D) => void) {
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  draw(c.getContext("2d")!);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping;
+  return t;
+}
+const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+/** speckles: [r,g,b,alpha range], count, size range */
+function flecks(x: CanvasRenderingContext2D, w: number, h: number, n: number, cols: [number, number, number][], s0: number, s1: number, a0: number, a1: number) {
+  for (let i = 0; i < n; i++) {
+    const [r, g, b] = cols[(Math.random() * cols.length) | 0];
+    x.fillStyle = `rgba(${r},${g},${b},${rnd(a0, a1)})`;
+    x.beginPath();
+    x.ellipse(rnd(0, w), rnd(0, h), rnd(s0, s1), rnd(s0, s1) * rnd(0.4, 1), rnd(0, Math.PI), 0, Math.PI * 2);
+    x.fill();
+  }
+}
 let _paper: THREE.Texture | null = null;
+/** translucent tan cone paper with the ground herb showing through */
 function paperTex() {
   if (_paper) return _paper;
-  const c = document.createElement("canvas");
-  c.width = 128;
-  c.height = 256;
-  const x = c.getContext("2d")!;
-  // unbleached brown hemp paper (never white)
-  x.fillStyle = "#9a6a3c";
-  x.fillRect(0, 0, 128, 256);
-  for (let i = 0; i < 70; i++) {
-    x.strokeStyle = Math.random() < 0.5 ? `rgba(60,34,14,${0.08 + Math.random() * 0.12})` : `rgba(205,160,110,${0.06 + Math.random() * 0.1})`;
-    x.beginPath();
-    const xx = Math.random() * 128;
-    x.moveTo(xx, 0);
-    x.lineTo(xx + (Math.random() - 0.5) * 20, 256);
-    x.stroke();
-  }
-  _paper = new THREE.CanvasTexture(c);
-  _paper.colorSpace = THREE.SRGBColorSpace;
+  _paper = canvasTex(512, 512, (x) => {
+    x.fillStyle = "rgb(178,163,118)";
+    x.fillRect(0, 0, 512, 512);
+    flecks(x, 512, 512, 5200, [[118, 108, 62], [104, 92, 52], [135, 118, 72], [96, 84, 48]], 0.8, 2.6, 0.25, 0.6);
+    flecks(x, 512, 512, 2200, [[214, 200, 156], [205, 190, 145], [226, 214, 172]], 0.6, 1.8, 0.25, 0.55);
+    flecks(x, 512, 512, 260, [[82, 70, 40], [120, 86, 52]], 1, 3.4, 0.25, 0.5);
+    // soft paper fibres
+    for (let i = 0; i < 90; i++) {
+      x.strokeStyle = `rgba(230,218,180,${rnd(0.04, 0.1)})`;
+      x.lineWidth = rnd(0.5, 1.4);
+      const xx = rnd(0, 512);
+      x.beginPath();
+      x.moveTo(xx, 0);
+      x.lineTo(xx + rnd(-30, 30), 512);
+      x.stroke();
+    }
+    // glued seam
+    x.fillStyle = "rgba(205,190,145,0.28)";
+    x.fillRect(250, 0, 10, 512);
+  });
   return _paper;
+}
+let _kraft: THREE.Texture | null = null;
+/** light kraft filter tip */
+function kraftTex() {
+  if (_kraft) return _kraft;
+  _kraft = canvasTex(256, 128, (x) => {
+    const g = x.createLinearGradient(0, 0, 0, 128);
+    g.addColorStop(0, "rgb(226,182,130)");
+    g.addColorStop(1, "rgb(240,200,148)");
+    x.fillStyle = g;
+    x.fillRect(0, 0, 256, 128);
+    flecks(x, 256, 128, 700, [[205, 160, 112], [248, 214, 166]], 0.5, 1.5, 0.2, 0.45);
+    for (let i = 0; i < 40; i++) {
+      x.strokeStyle = `rgba(190,140,95,${rnd(0.06, 0.14)})`;
+      const yy = rnd(0, 128);
+      x.beginPath();
+      x.moveTo(0, yy);
+      x.lineTo(256, yy + rnd(-4, 4));
+      x.stroke();
+    }
+  });
+  return _kraft;
+}
+let _herb: THREE.Texture | null = null;
+/** packed ground flower seen at the open end */
+function herbTex() {
+  if (_herb) return _herb;
+  _herb = canvasTex(256, 256, (x) => {
+    x.fillStyle = "rgb(92,88,50)";
+    x.fillRect(0, 0, 256, 256);
+    flecks(x, 256, 256, 2600, [[120, 116, 64], [70, 66, 36], [140, 128, 74], [104, 86, 52]], 0.8, 3, 0.4, 0.85);
+    flecks(x, 256, 256, 400, [[176, 160, 108], [60, 52, 30]], 0.6, 2, 0.4, 0.8);
+  });
+  return _herb;
 }
 
 export const stage = new Stage();
