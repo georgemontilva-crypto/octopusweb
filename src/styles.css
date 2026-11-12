@@ -526,3 +526,7 @@ fieldset.field { gap: 12px; }
 }
 .ink-format { margin-top: 14px; display: flex; justify-content: center; }
 .media-tall { max-height: 520px; width: auto !important; margin: 0 auto; object-fit: contain; }
+
+/* tentacles hugging the pre-roll scene */
+.pop-stage .tentacles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.pop-stage .pop-p { z-index: 1; }

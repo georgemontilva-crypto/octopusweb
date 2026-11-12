@@ -213,7 +213,7 @@ class Stage {
     const R = TUBE_R * 0.86;
     const pre = new THREE.Group();
     pre.name = "preroll";
-    const crutch = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.6, R * 0.6, L * 0.2, 32), new THREE.MeshStandardMaterial({ color: 0xcaa874, roughness: 0.9 }));
+    const crutch = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.6, R * 0.6, L * 0.2, 32), new THREE.MeshStandardMaterial({ color: 0xd9b98a, roughness: 0.9 }));
     crutch.position.y = -L / 2 + L * 0.1;
     const pts: THREE.Vector2[] = [];
     const steps = 18;
@@ -224,7 +224,7 @@ class Stage {
     }
     pts.push(new THREE.Vector2(R * 0.55, L / 2 - L * 0.03));
     pts.push(new THREE.Vector2(R * 0.12, L / 2));
-    const paper = new THREE.Mesh(new THREE.LatheGeometry(pts, 40), new THREE.MeshStandardMaterial({ map: paperTex(), color: 0xf6f1e7, roughness: 0.85 }));
+    const paper = new THREE.Mesh(new THREE.LatheGeometry(pts, 40), new THREE.MeshStandardMaterial({ map: paperTex(), color: 0xffffff, roughness: 0.9 }));
     pre.add(crutch, paper);
     pre.position.y = -TUBE_H * 0.02;
     pre.userData.y0 = pre.position.y;
@@ -406,10 +406,11 @@ function paperTex() {
   c.width = 128;
   c.height = 256;
   const x = c.getContext("2d")!;
-  x.fillStyle = "#f7f2e8";
+  // unbleached brown hemp paper (never white)
+  x.fillStyle = "#9a6a3c";
   x.fillRect(0, 0, 128, 256);
-  for (let i = 0; i < 40; i++) {
-    x.strokeStyle = `rgba(150,130,100,${0.05 + Math.random() * 0.08})`;
+  for (let i = 0; i < 70; i++) {
+    x.strokeStyle = Math.random() < 0.5 ? `rgba(60,34,14,${0.08 + Math.random() * 0.12})` : `rgba(205,160,110,${0.06 + Math.random() * 0.1})`;
     x.beginPath();
     const xx = Math.random() * 128;
     x.moveTo(xx, 0);

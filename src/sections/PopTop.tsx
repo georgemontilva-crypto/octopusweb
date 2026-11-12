@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Product3D from "../three/Product3D";
+import Tentacles from "../components/Tentacles";
 import { FLAVORS } from "../data";
 import type { Ctrl } from "../three/stage";
 
@@ -60,6 +61,7 @@ export default function PopTop() {
           </div>
           <div className="pop-stage">
             <div className="pop-glow" />
+            <Tentacles color={f.color} />
             <Product3D key={f.slug} flavor={f} kind="tube" pop ctrl={ctrl} live className="pop-p" fill={0.86} />
           </div>
         </div>
