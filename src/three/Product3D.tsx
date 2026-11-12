@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Kind } from "./stage";
+import type { Kind, Ctrl } from "./stage";
 import type { Flavor } from "../data";
 import { srcSet } from "../lib/img";
 import { isTouch } from "../lib/theme";
@@ -14,13 +14,16 @@ type Props = {
   phase?: number;
   spin?: boolean;
   label?: string;
+  pop?: boolean;
+  ctrl?: Ctrl;
+  live?: boolean;
 };
 
 /** Start downloading the 3D engine early (e.g. while the intro is on screen). */
 export const preload3D = () => import("./stage");
 
 /** In-page slot: the 3D engine paints a real 3D product into a canvas inside this element. */
-export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label }: Props) {
+export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label, pop, ctrl, live }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   // Royal Haze has no tall-box photo: dabs fall back to the display-box photo
@@ -41,6 +44,9 @@ export default function Product3D({ flavor, kind, className = "", fill, sway, ya
         spin,
         yaw: yaw ?? (kind === "box" ? -0.5 : 0),
         phase,
+        pop,
+        ctrl,
+        live,
       });
       if (stage.failed) setFailed(true);
     });
@@ -48,10 +54,10 @@ export default function Product3D({ flavor, kind, className = "", fill, sway, ya
       dead = true;
       off?.();
     };
-  }, [flavor, kind, fill, sway, yaw, phase, spin, has3D]);
+  }, [flavor, kind, fill, sway, yaw, phase, spin, has3D, pop, ctrl, live]);
 
   const photo = !has3D ? flavor.box : failed ? (kind === "tube" ? flavor.tube : flavor.tall) : null;
-  const canDrag = has3D && !failed && !isTouch();
+  const canDrag = has3D && !failed && !isTouch() && !ctrl;
   return (
     <div
       ref={ref}

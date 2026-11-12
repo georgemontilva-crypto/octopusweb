@@ -50,7 +50,7 @@ export default function About() {
               <li><b>More lines</b><span>In development</span><em>Coming soon</em></li>
             </ul>
             <div className="ctas">
-              <InkLink href="/products" className="btn btn-primary">See products</InkLink>
+              <InkLink href="/products" className="btn btn-flavor">See products</InkLink>
               <InkLink href="/wholesale" className="btn btn-line">Wholesale</InkLink>
             </div>
           </Reveal>

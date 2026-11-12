@@ -43,7 +43,7 @@ export default function LeadForm({ type, children, submitLabel, done }: { type: 
       <input name="website" className="hp" tabIndex={-1} autoComplete="off" aria-hidden />
       <label className="check"><input type="checkbox" required /> <span>I confirm I am 21 years of age or older.</span></label>
       {status === "error" && <p className="form-err" role="alert">{err}</p>}
-      <button className="btn btn-primary form-send" disabled={status === "sending"}>{status === "sending" ? "Sending…" : submitLabel}</button>
+      <button className="btn btn-flavor form-send" disabled={status === "sending"}>{status === "sending" ? "Sending…" : submitLabel}</button>
     </form>
   );
 }

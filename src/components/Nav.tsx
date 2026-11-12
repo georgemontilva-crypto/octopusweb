@@ -37,7 +37,7 @@ export default function Nav() {
             {LINKS.map((l) => (
               <InkLink key={l.href} href={l.href} className={"nav-link" + active(l.href)}>{l.label}</InkLink>
             ))}
-            <InkLink href="/wholesale" className={"btn btn-primary btn-sm" + active("/wholesale")}>Wholesale</InkLink>
+            <InkLink href="/wholesale" className={"btn btn-flavor btn-sm" + active("/wholesale")}>Wholesale</InkLink>
           </nav>
           <button className={"burger" + (open ? " is-open" : "")} onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
             <i /><i />
@@ -49,7 +49,7 @@ export default function Nav() {
           {[{ label: "Home", href: "/" }, ...LINKS].map((l) => (
             <InkLink key={l.href} href={l.href} className={"menu-item" + (loc === l.href ? " is-active" : "")} onClick={() => setOpen(false)}>{l.label}</InkLink>
           ))}
-          <InkLink href="/wholesale" className="btn btn-primary menu-cta" onClick={() => setOpen(false)}>Wholesale</InkLink>
+          <InkLink href="/wholesale" className="btn btn-flavor menu-cta" onClick={() => setOpen(false)}>Wholesale</InkLink>
         </nav>
       </div>
     </>

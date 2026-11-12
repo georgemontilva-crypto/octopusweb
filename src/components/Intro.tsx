@@ -38,7 +38,7 @@ export default function Intro({ onDone }: { onDone: () => void }) {
             <p className="gate-kicker">Botanical products · Adults only</p>
             <h2 className="gate-title" id="gate-title">Are you 21 or older?</h2>
             <div className="gate-actions">
-              <button className="btn btn-primary" onClick={yes}>Yes, enter</button>
+              <button className="btn btn-flavor" onClick={yes}>Yes, enter</button>
               <button className="btn btn-line" onClick={() => setDenied(true)}>No</button>
             </div>
           </div>

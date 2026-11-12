@@ -21,7 +21,15 @@ export type SlotOpts = {
   phase?: number;
   /** slow continuous turn instead of a sway */
   spin?: boolean;
+  /** tube with a separate cap and a pre-roll inside (for the "pop the top" scene) */
+  pop?: boolean;
+  /** external control (viewer / scroll scenes). Read every frame. */
+  ctrl?: Ctrl;
+  /** keep rendering while the page scrolls (sticky scenes) */
+  live?: boolean;
 };
+
+export type Ctrl = { yaw: number; pitch: number; zoom: number; progress: number };
 
 type Slot = {
   host: HTMLElement;
@@ -127,7 +135,9 @@ class Stage {
   build(o: SlotOpts) {
     const g = new THREE.Group();
     const accent = new THREE.Color(o.color);
-    if (o.kind === "tube") {
+    if (o.kind === "tube" && o.pop) {
+      this.buildPop(g, o);
+    } else if (o.kind === "tube") {
       g.add(new THREE.Mesh(
         new THREE.CylinderGeometry(TUBE_R, TUBE_R, TUBE_H, this.touch ? 64 : 128, 1, true),
         new THREE.MeshPhysicalMaterial({ map: this.tex(o.tex.tube, "tube"), roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.12 }),
@@ -147,6 +157,70 @@ class Stage {
       g.add(new THREE.Mesh(new THREE.BoxGeometry(BOX_W, BOX_H, BOX_W), [side, side, cap, cap, front, front]));
     }
     return g;
+  }
+
+  /** Tube body + separate cap (top 7.9% of the label) + a pre-roll hidden inside. */
+  buildPop(g: THREE.Group, o: SlotOpts) {
+    const CAP = 0.079;
+    const base = this.tex(o.tex.tube, "tube");
+    const bodyTex = base.clone();
+    bodyTex.repeat.set(2, 1 - CAP);
+    bodyTex.needsUpdate = true;
+    const capTex = base.clone();
+    capTex.repeat.set(2, CAP);
+    capTex.offset.set(0.5, 1 - CAP);
+    capTex.needsUpdate = true;
+    const segs = this.touch ? 64 : 128;
+    const bodyH = TUBE_H * (1 - CAP);
+    const body = new THREE.Mesh(
+      new THREE.CylinderGeometry(TUBE_R, TUBE_R, bodyH, segs, 1, true),
+      new THREE.MeshPhysicalMaterial({ map: bodyTex, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.12 }),
+    );
+    body.position.y = -TUBE_H / 2 + bodyH / 2;
+    const inner = new THREE.Mesh(new THREE.CylinderGeometry(TUBE_R * 0.97, TUBE_R * 0.97, bodyH, 48, 1, true), new THREE.MeshStandardMaterial({ color: 0x0c0c12, side: THREE.BackSide, roughness: 0.6 }));
+    inner.position.copy(body.position);
+    const bottom = new THREE.Mesh(new THREE.CircleGeometry(TUBE_R, 48), new THREE.MeshPhysicalMaterial({ color: 0x0b0b10, roughness: 0.3, clearcoat: 1 }));
+    bottom.rotation.x = Math.PI / 2;
+    bottom.position.y = -TUBE_H / 2;
+    const tube = new THREE.Group();
+    tube.name = "tubeBody";
+    tube.add(body, inner, bottom);
+
+    const capH = TUBE_H * CAP;
+    const cap = new THREE.Group();
+    cap.name = "cap";
+    const capSide = new THREE.Mesh(
+      new THREE.CylinderGeometry(TUBE_R * 1.03, TUBE_R * 1.03, capH, segs, 1, true),
+      new THREE.MeshPhysicalMaterial({ map: capTex, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.1 }),
+    );
+    const capTop = new THREE.Mesh(new THREE.CircleGeometry(TUBE_R * 1.03, 48), new THREE.MeshPhysicalMaterial({ color: 0x0b0b10, roughness: 0.25, clearcoat: 1 }));
+    capTop.rotation.x = -Math.PI / 2;
+    capTop.position.y = capH / 2;
+    cap.add(capSide, capTop);
+    cap.position.y = TUBE_H / 2 - capH / 2;
+    cap.userData.y0 = cap.position.y;
+
+    // pre-roll: cardboard crutch + paper cone with a twisted tip
+    const L = TUBE_H * 0.86;
+    const R = TUBE_R * 0.86;
+    const pre = new THREE.Group();
+    pre.name = "preroll";
+    const crutch = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.6, R * 0.6, L * 0.2, 32), new THREE.MeshStandardMaterial({ color: 0xcaa874, roughness: 0.9 }));
+    crutch.position.y = -L / 2 + L * 0.1;
+    const pts: THREE.Vector2[] = [];
+    const steps = 18;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const y = -L / 2 + L * 0.2 + t * L * 0.72;
+      pts.push(new THREE.Vector2(R * (0.62 + 0.38 * t), y));
+    }
+    pts.push(new THREE.Vector2(R * 0.55, L / 2 - L * 0.03));
+    pts.push(new THREE.Vector2(R * 0.12, L / 2));
+    const paper = new THREE.Mesh(new THREE.LatheGeometry(pts, 40), new THREE.MeshStandardMaterial({ map: paperTex(), color: 0xf6f1e7, roughness: 0.85 }));
+    pre.add(crutch, paper);
+    pre.position.y = -TUBE_H * 0.02;
+    pre.userData.y0 = pre.position.y;
+    g.add(tube, cap, pre);
   }
 
   size(s: Slot) {
@@ -236,13 +310,14 @@ class Stage {
     // phones: 30fps, and no 3D work at all while the user is scrolling (keeps scrolling buttery)
     if (this.touch) {
       if (now - this.lastFrame < 32) return;
-      if (isScrolling()) return;
     }
+    const scrolling = this.touch && isScrolling();
     this.lastFrame = now;
     const t = (now / 1000) * (reducedMotion() ? 0.2 : 1);
     for (const s of this.slots) {
       if (!s.visible || s.w < 2 || s.h < 2) continue;
       const o = s.o;
+      if (scrolling && !o.live) continue;
       s.hoverX += (s.tHoverX - s.hoverX) * 0.08;
       s.hoverY += (s.tHoverY - s.hoverY) * 0.08;
       if (!s.dragging) s.dragYaw *= 0.94;
@@ -250,8 +325,37 @@ class Stage {
       const ph = o.phase ?? 0;
       const g = s.group;
       const base = o.spin ? t * 0.45 : (o.sway ?? 0.32) * Math.sin(t * 0.7 + ph);
-      g.rotation.y = (o.yaw ?? 0) + base + s.dragYaw + s.hoverX * 0.35;
-      g.rotation.x = s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
+      const c = o.ctrl;
+      if (c) {
+        // externally driven (viewer / scroll scene): smooth towards the requested pose
+        const ty = c.yaw + (o.yaw ?? 0) + Math.sin(t * 0.6 + ph) * 0.04;
+        g.rotation.y += (ty - g.rotation.y) * 0.18;
+        g.rotation.x += (c.pitch - g.rotation.x) * 0.18;
+      } else {
+        g.rotation.y = (o.yaw ?? 0) + base + s.dragYaw + s.hoverX * 0.35;
+        g.rotation.x = s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
+      }
+      let extraH = 0;
+      if (o.pop) {
+        const p = c ? c.progress : 0;
+        const e = (x: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+        const cap = g.getObjectByName("cap");
+        const pre = g.getObjectByName("preroll");
+        const body = g.getObjectByName("tubeBody");
+        const a = e(p / 0.3), b = e((p - 0.22) / 0.48), d = e((p - 0.7) / 0.3);
+        if (cap) {
+          cap.position.y = cap.userData.y0 + a * 0.5 + b * 0.25;
+          cap.position.x = a * 0.16;
+          cap.rotation.z = -a * 0.9;
+        }
+        if (pre) {
+          pre.position.y = pre.userData.y0 + b * 0.62 + d * 0.08;
+          pre.rotation.z = d * 0.35;
+          pre.rotation.y = t * 0.6 * d;
+        }
+        if (body) body.position.y = -d * 0.18;
+        extraH = a * 0.45 + b * 0.55;
+      }
       g.rotation.z = Math.sin(t * 0.5 + ph) * 0.025;
       g.position.y = Math.sin(t * 1.1 + ph) * 0.02;
       const k = Math.min(1, (now - s.born) / 280);
@@ -261,10 +365,12 @@ class Stage {
       const fill = o.fill ?? 0.84;
       const tan = Math.tan(((s.cam.fov * Math.PI) / 180) / 2);
       const objW = o.kind === "tube" ? TUBE_R * 2.4 : BOX_W * 1.9;
-      const dist = Math.max(1.08 / fill / 2 / tan, objW / fill / 2 / tan / aspect);
+      const objH = 1.08 + extraH;
+      let dist = Math.max(objH / fill / 2 / tan, objW / fill / 2 / tan / aspect);
+      if (c) dist /= c.zoom;
       s.cam.aspect = aspect;
-      s.cam.position.set(0, 0.02, dist);
-      s.cam.lookAt(0, 0, 0);
+      s.cam.position.set(0, 0.02 + extraH * 0.32, dist);
+      s.cam.lookAt(0, extraH * 0.32, 0);
       s.cam.updateProjectionMatrix();
       this.rimL.color.copy(s.rim);
 
@@ -283,6 +389,28 @@ class Stage {
       s.drawn = true;
     }
   };
+}
+
+let _paper: THREE.Texture | null = null;
+function paperTex() {
+  if (_paper) return _paper;
+  const c = document.createElement("canvas");
+  c.width = 128;
+  c.height = 256;
+  const x = c.getContext("2d")!;
+  x.fillStyle = "#f7f2e8";
+  x.fillRect(0, 0, 128, 256);
+  for (let i = 0; i < 40; i++) {
+    x.strokeStyle = `rgba(150,130,100,${0.05 + Math.random() * 0.08})`;
+    x.beginPath();
+    const xx = Math.random() * 128;
+    x.moveTo(xx, 0);
+    x.lineTo(xx + (Math.random() - 0.5) * 20, 256);
+    x.stroke();
+  }
+  _paper = new THREE.CanvasTexture(c);
+  _paper.colorSpace = THREE.SRGBColorSpace;
+  return _paper;
 }
 
 export const stage = new Stage();

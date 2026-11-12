@@ -1,33 +1,53 @@
 import { InkLink } from "../components/Transition";
 import Reveal from "../components/Reveal";
+import Product3D from "../three/Product3D";
+import { FLAVORS } from "../data";
 import { srcSet } from "../lib/img";
 
-/** Wholesale band with the retail displays. */
-export function WholesaleBand() {
+/** Dabs feature: rotating 3D box + three facts. */
+export function DabsBand() {
+  const f = FLAVORS[0];
   return (
     <section className="sec">
-      <div className="wrap">
-        <Reveal className="band">
-          <div className="band-copy">
-            <p className="eyebrow">For retailers & distributors</p>
-            <h2 className="h2">Made to sell <em>from the counter.</em></h2>
-            <p className="lead">Ready-to-display packs that stand out on any shelf: 20-pack pre-roll displays and six-flavor dab displays.</p>
-            <div className="ctas">
-              <InkLink href="/wholesale" className="btn btn-primary">Apply for wholesale</InkLink>
-              <InkLink href="/contact" className="btn btn-line">Contact us</InkLink>
-            </div>
-          </div>
-          <div className="band-media">
-            <img src="/img/p/lineup-blue.webp" srcSet={srcSet("/img/p/lineup-blue.webp", 560, 1300)} sizes="(max-width: 900px) 90vw, 40vw" alt="OCTOPUS Blue Lotus dabs six-flavor display" loading="lazy" className="band-img-a" />
-            <img src="/img/p/purple-paradise-disp.webp" srcSet={srcSet("/img/p/purple-paradise-disp.webp")} sizes="(max-width: 900px) 60vw, 22vw" alt="OCTOPUS Blue Lotus pre-roll 20-pack display" loading="lazy" className="band-img-b" />
-          </div>
+      <div className="wrap dabs">
+        <Reveal className="dabs-stage">
+          <Product3D flavor={f} kind="box" className="dabs-p" fill={0.86} spin />
+        </Reveal>
+        <Reveal className="dabs-copy">
+          <p className="eyebrow">Dabs · 2.5G</p>
+          <h2 className="mega mega-sm">Botanical<br />concentrate</h2>
+          <ul className="facts">
+            <li><b>2.5G</b><span>per box</span></li>
+            <li><b>6</b><span>flavors</span></li>
+            <li><b>0</b><span>THC</span></li>
+          </ul>
+          <InkLink href="/products" className="btn btn-flavor">See all dabs</InkLink>
         </Reveal>
       </div>
     </section>
   );
 }
 
-/** About teaser + lab report teaser. */
+/** Full flavor-colored wholesale band (the whole block takes the current flavor color). */
+export function WholesaleBand() {
+  return (
+    <section className="flavor-band">
+      <div className="wrap fb-grid">
+        <div>
+          <p className="eyebrow fb-eyebrow">For retailers & distributors</p>
+          <h2 className="mega mega-sm fb-title">Put OCTOPUS<br />on your shelf</h2>
+          <p className="fb-text">Counter-ready 20-pack pre-roll displays and six-flavor dab displays.</p>
+          <div className="ctas">
+            <InkLink href="/wholesale" className="btn btn-dark">Apply for wholesale</InkLink>
+            <InkLink href="/contact" className="btn btn-dark-line">Contact us</InkLink>
+          </div>
+        </div>
+        <img src="/img/p/lineup-blue.webp" srcSet={srcSet("/img/p/lineup-blue.webp", 560, 1300)} sizes="(max-width: 900px) 90vw, 45vw" alt="OCTOPUS Blue Lotus displays" loading="lazy" className="fb-img" />
+      </div>
+    </section>
+  );
+}
+
 export function InfoBand() {
   return (
     <section className="sec sec-tight">

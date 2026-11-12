@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="footer-brand">
             <img src="/img/logo.webp" alt="OCTOPUS" loading="lazy" />
             <p>Bold botanical blends. Strictly 21+.</p>
-            <InkLink href="/wholesale" className="btn btn-primary btn-sm">Wholesale</InkLink>
+            <InkLink href="/wholesale" className="btn btn-flavor btn-sm">Wholesale</InkLink>
           </div>
           <div className="footer-col">
             <h4>Explore</h4>

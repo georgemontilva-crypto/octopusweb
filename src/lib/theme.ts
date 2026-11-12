@@ -21,8 +21,14 @@ export const theme = {
 export function setTint(a: string, b: string) {
   theme.a = hexToRgb(a);
   theme.b = hexToRgb(b);
-  document.documentElement.style.setProperty("--tint-a", a);
-  document.documentElement.style.setProperty("--tint-b", b);
+  const root = document.documentElement.style;
+  root.setProperty("--tint-a", a);
+  root.setProperty("--tint-b", b);
+  // the whole site takes the flavor's color
+  root.setProperty("--flavor", a);
+  const [r, g, bl] = theme.a;
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  root.setProperty("--on-flavor", lum > 0.55 ? "#0b0812" : "#ffffff");
 }
 
 export function resetTint() {

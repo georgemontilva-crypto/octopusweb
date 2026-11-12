@@ -1,6 +1,5 @@
 import Collection from "../sections/Collection";
-import Formats from "../sections/Formats";
-import { WholesaleBand } from "../sections/Bands";
+import { WholesaleBand, DabsBand } from "../sections/Bands";
 import { LINES } from "../data";
 import { InkLink } from "../components/Transition";
 import { useSeo } from "../lib/seo";
@@ -29,7 +28,7 @@ export default function Products() {
         </div>
       </header>
       <Collection id="blue-lotus" eyebrow="Blue Lotus line" title="Blue Lotus." />
-      <Formats />
+      <DabsBand />
       <WholesaleBand />
     </>
   );
