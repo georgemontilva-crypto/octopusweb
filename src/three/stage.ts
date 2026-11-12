@@ -87,7 +87,7 @@ class Stage {
       key.position.set(1.5, 2, 3);
       this.rimL = new THREE.DirectionalLight(0x7b3cff, 3.2);
       this.rimL.position.set(-3, 1, -1.5);
-      const rimR = new THREE.DirectionalLight(0xff2bb3, 2.2);
+      const rimR = new THREE.DirectionalLight(0xfff4ea, 1.6);
       rimR.position.set(3, -0.5, -1.5);
       this.scene.add(key, this.rimL, rimR);
 
@@ -213,6 +213,9 @@ class Stage {
     }
     this.slots.add(s);
     this.size(s);
+    // draw on the very next frame if already on screen (no blank frame while the observer catches up)
+    const rr = host.getBoundingClientRect();
+    s.visible = rr.bottom > -80 && rr.top < window.innerHeight + 80;
     this.io?.observe(host);
     this.ro?.observe(host);
     return () => {

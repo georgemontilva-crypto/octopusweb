@@ -1,89 +1,74 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useParams } from "wouter";
-import { FLAVORS, flavorBySlug } from "../data";
+import { FLAVORS, flavorBySlug, INGREDIENTS } from "../data";
 import { InkLink } from "../components/Transition";
 import Product3D from "../three/Product3D";
-import { ScrollTrigger } from "../lib/motion";
 import { setTint } from "../lib/theme";
 import { srcSet } from "../lib/img";
 import { useSeo } from "../lib/seo";
-import { useEntered } from "../App";
 import NotFound from "./NotFound";
 
 export default function FlavorPage() {
   const { slug = "" } = useParams<{ slug: string }>();
   const f = flavorBySlug(slug);
-  const root = useRef<HTMLDivElement>(null);
-  const entered = useEntered();
   useSeo(f ? `${f.name} · Blue Lotus · OCTOPUS` : "OCTOPUS", f ? `OCTOPUS Blue Lotus ${f.name} — ${f.vibe}. Pre-Roll 2G and Dabs 2.5G. 21+.` : undefined);
-
   useEffect(() => {
-    if (!f || !entered) return;
-    setTint(f.color, f.color2);
-    const t = setTimeout(() => ScrollTrigger.refresh(), 250);
-    return () => clearTimeout(t);
-  }, [f, entered]);
-
+    if (f) setTint(f.color, f.color2);
+  }, [f]);
   if (!f) return <NotFound />;
   const i = FLAVORS.indexOf(f);
+  const next = FLAVORS[(i + 1) % FLAVORS.length];
+  const prev = FLAVORS[(i + FLAVORS.length - 1) % FLAVORS.length];
 
   return (
-    <div ref={root} className="fp" key={f.slug} style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2 }}>
-      <section className="fp-top wrap">
-        <div className="fp-tank fp-fade">
-          <span className="tank-water" />
-          <div className="fp-duo">
-            <figure>
-              <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="fp-p" fill={0.86} />
-              <figcaption>Pre-Roll <b>2G</b></figcaption>
-            </figure>
-            <figure>
-              <Product3D key={"b" + f.slug} flavor={f} kind="box" className="fp-p" fill={0.84} phase={1.2} />
-              <figcaption>Dabs <b>2.5G</b></figcaption>
-            </figure>
+    <div className="pdp" key={f.slug} style={{ ["--c" as string]: f.color, ["--c2" as string]: f.color2 }}>
+      <section className="wrap pdp-top">
+        <nav className="crumbs" aria-label="Breadcrumb">
+          <InkLink href="/products">Products</InkLink> <span>/</span> <span>Blue Lotus</span> <span>/</span> <b>{f.name}</b>
+        </nav>
+        <div className="pdp-grid">
+          <div className="pdp-stage">
+            <span className="fcard-light" aria-hidden />
+            <div className="pdp-duo">
+              <figure><Product3D key={"t" + f.slug} flavor={f} kind="tube" className="pdp-p" fill={0.9} /><figcaption>Pre-Roll · 2G</figcaption></figure>
+              <figure><Product3D key={"b" + f.slug} flavor={f} kind="box" className="pdp-p" fill={0.88} phase={1.2} /><figcaption>Dabs · 2.5G</figcaption></figure>
+            </div>
+            <span className="fcard-floor" aria-hidden />
           </div>
-          <span className="tank-glass" aria-hidden />
-        </div>
-        <div className="fp-info">
-          <p className="kicker fp-fade">Blue Lotus · {String(i + 1).padStart(2, "0")}/06</p>
-          <h1 className="fp-name fp-fade">{f.name}</h1>
-          <p className="fp-vibe fp-fade">{f.vibe}</p>
-          <p className="fp-tag fp-fade">{f.tagline}</p>
-          <ul className="notes fp-fade">
-            {f.notes.map((n) => <li key={n}>{n}</li>)}
-          </ul>
-          <dl className="fp-specs fp-fade">
-            <div><dt>Pre-Roll</dt><dd>2G</dd></div>
-            <div><dt>Dabs</dt><dd>2.5G</dd></div>
-          </dl>
-          <div className="fp-ctas">
-            <InkLink href={`/contact?type=Wholesale&product=${encodeURIComponent("Blue Lotus " + f.name)}`} className="btn btn-glow">Wholesale inquiry</InkLink>
-            <InkLink href="/lab-reports" className="btn btn-ghost">Lab results</InkLink>
+          <div className="pdp-info">
+            <p className="eyebrow">Blue Lotus · {String(i + 1).padStart(2, "0")} / 06</p>
+            <h1 className="pdp-name">{f.name}</h1>
+            <p className="pdp-vibe">{f.vibe}</p>
+            <p className="pdp-tag">{f.tagline}</p>
+            <dl className="spec">
+              <div><dt>Aroma notes</dt><dd>{f.notes.join(", ")}</dd></div>
+              <div><dt>Formats</dt><dd>Pre-Roll 2G · Dabs 2.5G</dd></div>
+              <div><dt>Displays</dt><dd>20-pack (pre-roll) · 6-flavor (dabs)</dd></div>
+              <div><dt>Ingredients</dt><dd>{INGREDIENTS.map((x) => x.name).join(", ")}, food-grade binding agent</dd></div>
+              <div><dt>Free from</dt><dd>THC · Hemp · Delta · Synthetic cannabinoids</dd></div>
+            </dl>
+            <div className="ctas">
+              <InkLink href={`/wholesale?product=${encodeURIComponent("Blue Lotus " + f.name)}`} className="btn btn-primary">Wholesale inquiry</InkLink>
+              <InkLink href="/lab-reports" className="btn btn-line">Lab report</InkLink>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="rt-grid wrap fp-displays">
-        <figure className="rt-card">
+      <section className="wrap pdp-displays">
+        <figure className="media-card">
           <img src={f.disp} srcSet={srcSet(f.disp)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} pre-roll 20-pack display`} loading="lazy" />
           <figcaption>Pre-Roll · 20-pack display</figcaption>
         </figure>
-        <figure className="rt-card">
+        <figure className="media-card">
           <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} dabs display`} loading="lazy" />
           <figcaption>Dabs · display box</figcaption>
         </figure>
       </section>
 
-      <nav className="fp-more wrap" aria-label="Other flavors">
-        <p className="kicker">More Blue Lotus flavors</p>
-        <div className="fp-chips">
-          {FLAVORS.filter((x) => x.slug !== f.slug).map((x) => (
-            <InkLink key={x.slug} href={`/flavors/${x.slug}`} color={x.color} className="fp-chip">
-              <i style={{ background: x.color }} />
-              {x.name}
-            </InkLink>
-          ))}
-        </div>
+      <nav className="wrap pdp-nav" aria-label="More flavors">
+        <InkLink href={`/products/${prev.slug}`} className="pdp-nav-link"><span>← Previous</span><b style={{ color: prev.color }}>{prev.name}</b></InkLink>
+        <InkLink href={`/products/${next.slug}`} className="pdp-nav-link pdp-nav-next"><span>Next →</span><b style={{ color: next.color }}>{next.name}</b></InkLink>
       </nav>
     </div>
   );

@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
-import "@fontsource-variable/bricolage-grotesque";
-import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/fraunces";
+import "@fontsource-variable/fraunces/wght-italic.css";
+import "@fontsource-variable/manrope";
 import "./styles.css";
 import App from "./App";
 

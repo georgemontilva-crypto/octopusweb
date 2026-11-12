@@ -57,8 +57,9 @@ async function handleContact(req, res) {
   const name = String(d.name || "").trim().slice(0, 120);
   const email = String(d.email || "").trim().slice(0, 160);
   const message = String(d.message || "").trim().slice(0, 3000);
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !message) return send(res, 400, { error: "Please fill in your name, a valid email and a message." });
-  const entry = { type: String(d.type || "General").slice(0, 30), name, email, business: String(d.business || "").slice(0, 160), location: String(d.location || "").slice(0, 160), message };
+  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || (!message && d.type !== "Wholesale")) return send(res, 400, { error: "Please fill in your name, a valid email and a message." });
+  const clip = (v, n = 160) => String(v || "").slice(0, n);
+  const entry = { type: clip(d.type, 30), name, email, business: clip(d.business), location: clip(d.location), phone: clip(d.phone, 40), businessType: clip(d.businessType, 60), products: clip(d.products, 300), subject: clip(d.subject), message };
   console.log("[contact]", JSON.stringify(entry));
 
   const key = process.env.RESEND_API_KEY, to = process.env.CONTACT_TO;
@@ -72,7 +73,7 @@ async function handleContact(req, res) {
           to: to.split(",").map((s) => s.trim()),
           reply_to: email,
           subject: `[OCTOPUS · ${entry.type}] ${name}`,
-          html: `<h2>New ${esc(entry.type)} message</h2><p><b>Name:</b> ${esc(name)}<br><b>Email:</b> ${esc(email)}<br><b>Business:</b> ${esc(entry.business)}<br><b>Location:</b> ${esc(entry.location)}</p><p>${esc(message).replace(/\n/g, "<br>")}</p>`,
+          html: `<h2>New ${esc(entry.type)} request</h2><p>${Object.entries(entry).filter(([k, v]) => v && k !== "message").map(([k, v]) => `<b>${esc(k)}:</b> ${esc(v)}`).join("<br>")}</p><p>${esc(message).replace(/\n/g, "<br>")}</p>`,
         }),
       });
       if (!r.ok) console.error("[contact] resend failed", r.status, await r.text());
