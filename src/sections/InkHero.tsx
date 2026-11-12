@@ -9,10 +9,9 @@ import { setTint, isTouch } from "../lib/theme";
 const HERO = FLAVORS.filter((f) => f.tex.front);
 
 const STICKERS = [
-  { id: "logo", x: 44, y: 9, r: -10, node: <img src="/img/logo.webp" alt="" draggable={false} />, cls: "st-logo" },
   { id: "21", x: 91, y: 20, r: 12, node: <span>21+</span>, cls: "st-21" },
   { id: "thc", x: 92, y: 74, r: -8, node: <span>THC<br />FREE</span>, cls: "st-thc" },
-  { id: "bot", x: 40, y: 84, r: 6, node: <span>Botanical<br />Blend</span>, cls: "st-pill" },
+  { id: "bot", x: 40, y: 84, r: 6, node: <span>6<br />Flavors</span>, cls: "st-pill" },
 ];
 
 /** The ink wall: squirt octopus ink in the flavor color, drag the stickers, pick a flavor. */
@@ -34,7 +33,7 @@ export default function InkHero() {
             <span className="mega-1">Blue</span>
             <span className="mega-2">Lotus</span>
           </h1>
-          <p className="lead">Dried blue lotus flower and herbal botanicals in six flavors. <b>Pre-Roll 2G</b> and <b>Dabs 2.5G</b>. No THC. 21+.</p>
+          <p className="lead">Six flavors, two formats: <b>Pre-Roll 2G</b> (dried blue lotus and botanicals) and <b>Dabs 2.5G</b> (botanical concentrate). No THC. 21+.</p>
           <div className="ctas">
             <InkLink href="/products" className="btn btn-flavor">Explore products</InkLink>
             <InkLink href="/wholesale" className="btn btn-line">Wholesale</InkLink>
@@ -51,8 +50,14 @@ export default function InkHero() {
         </div>
         <div className="ink-stage" data-noink>
           <div className="ink-duo">
-            <Product3D key={"b" + f.slug} flavor={f} kind="box" className="ink-p ink-p-box" fill={0.9} phase={1.2} />
-            <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="ink-p ink-p-tube" fill={0.92} />
+            <div className="ink-item">
+              <Product3D key={"b" + f.slug} flavor={f} kind="box" className="ink-p ink-p-box" fill={0.9} phase={1.2} />
+              <span className="ink-tag">Dabs 2.5G</span>
+            </div>
+            <div className="ink-item ink-item-tube">
+              <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="ink-p ink-p-tube" fill={0.92} />
+              <span className="ink-tag">Pre-Roll 2G</span>
+            </div>
           </div>
           <div className="flavor-chips" role="radiogroup" aria-label="Flavor">
             {HERO.map((x, k) => (

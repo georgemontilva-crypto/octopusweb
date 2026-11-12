@@ -51,7 +51,7 @@ export default function FlavorPage() {
             <dl className="spec">
               <div><dt>Aroma notes</dt><dd>{f.notes.join(", ")}</dd></div>
               <div><dt>{kind === "tube" ? "Pre-Roll" : "Dabs"}</dt><dd>{kind === "tube" ? "2G · 1 pre-roll per tube · 20-pack display" : "2.5G botanical concentrate · 6-flavor display"}</dd></div>
-              <div><dt>Ingredients</dt><dd>{INGREDIENTS.map((x) => x.name).join(", ")}, food-grade binding agent</dd></div>
+              <div><dt>Ingredients</dt><dd>{kind === "tube" ? `${INGREDIENTS.map((x) => x.name).join(", ")}, food-grade binding agent` : "Blue Lotus botanical concentrate"}</dd></div>
               <div><dt>Free from</dt><dd>THC · Hemp · Delta · Synthetic cannabinoids</dd></div>
             </dl>
             <div className="ctas">
@@ -67,8 +67,8 @@ export default function FlavorPage() {
           <figcaption>Pre-Roll · 20-pack display</figcaption>
         </figure>
         <figure className="media-card">
-          <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} dabs display`} loading="lazy" />
-          <figcaption>Dabs · display box</figcaption>
+          <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} Blue Lotus Dabs 2.5G box`} loading="lazy" />
+          <figcaption>Dabs 2.5G · box</figcaption>
         </figure>
       </section>
     </div>

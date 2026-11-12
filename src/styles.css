@@ -390,8 +390,10 @@ fieldset.field { gap: 12px; }
 .ink-toggle.is-on { background: var(--flavor); color: var(--on-flavor); border-style: solid; }
 .ink-stage { position: relative; display: flex; flex-direction: column; align-items: center; }
 .ink-duo { width: 100%; height: min(60vh, 560px); display: grid; grid-template-columns: 1fr 0.72fr; align-items: end; padding: 0 6%; background: radial-gradient(ellipse 60% 55% at 50% 60%, color-mix(in srgb, var(--flavor) 30%, transparent), transparent 70%); transition: background 0.6s; }
-.ink-p { height: 100%; }
-.ink-p-tube { height: 94%; margin-left: -18%; }
+.ink-item { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.ink-item .ink-p { flex: 1; width: 100%; min-height: 0; }
+.ink-item-tube { height: 94%; margin-left: -18%; }
+.ink-tag { margin-top: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.55); border: 1px solid color-mix(in srgb, var(--flavor) 60%, transparent); font: 800 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; white-space: nowrap; }
 .flavor-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
 .fchip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line); background: rgba(9, 7, 15, 0.7); font: 700 13px/1 var(--sans); color: var(--muted); transition: all 0.25s; }
 .fchip i { width: 12px; height: 12px; border-radius: 50%; background: var(--s); }
@@ -402,7 +404,6 @@ fieldset.field { gap: 12px; }
 .sticker { position: absolute; pointer-events: auto; cursor: grab; touch-action: none; user-select: none; transition: transform 0.25s var(--ease), filter 0.25s; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); }
 .sticker.is-lift { cursor: grabbing; transform: scale(1.12); filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.6)); }
 .sticker span { display: grid; place-items: center; text-align: center; font: 900 14px/1 var(--sans); text-transform: uppercase; }
-.st-logo img { width: 110px; pointer-events: none; }
 .st-21 span { width: 72px; height: 72px; border-radius: 50%; background: #ffd91a; color: #0b0812; font-size: 22px; border: 3px solid #fff; }
 .st-thc span { width: 84px; height: 84px; border-radius: 50%; background: #fff; color: #0b0812; border: 3px dashed #0b0812; font-size: 13px; line-height: 1.1; }
 .st-pill span { padding: 12px 16px; border-radius: 999px; background: #ff3fb4; color: #fff; border: 3px solid #fff; font-size: 12px; line-height: 1.15; }
@@ -467,14 +468,12 @@ fieldset.field { gap: 12px; }
   .ink-duo { height: min(46svh, 420px); }
   .mega { font-size: clamp(64px, 21vw, 120px); }
   .ink-copy .ctas .btn { flex: 1 1 160px; }
-  .st-logo img { width: 74px; }
   .st-21 span { width: 56px; height: 56px; font-size: 17px; }
   .st-thc span { width: 64px; height: 64px; font-size: 11px; }
   .st-pill span { font-size: 10px; padding: 9px 12px; }
-  .stickers .st-logo { top: calc(92px + env(safe-area-inset-top)) !important; left: 3% !important; }
   .stickers .st-21 { top: calc(98px + env(safe-area-inset-top)) !important; left: auto !important; right: 4%; }
   .stickers .st-thc { top: calc(80px + env(safe-area-inset-top) + min(46svh, 420px) - 74px) !important; left: auto !important; right: 3%; }
-  .stickers .st-pill { top: calc(80px + env(safe-area-inset-top) + min(46svh, 420px) - 52px) !important; left: 3% !important; }
+  .stickers .st-pill { top: calc(80px + env(safe-area-inset-top) + min(46svh, 420px) - 130px) !important; left: 2% !important; }
   .pop { height: 240vh; }
   .pop-grid { grid-template-columns: 1fr; gap: 6px; text-align: center; }
   .pop-copy { order: 2; }

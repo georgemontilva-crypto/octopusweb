@@ -26,7 +26,7 @@ export const preload3D = () => import("./stage");
 export default function Product3D({ flavor, kind, className = "", fill, sway, yaw, phase, spin, label, pop, ctrl, live }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
-  // Royal Haze has no tall-box photo: dabs fall back to the display-box photo
+  // dabs fall back to the display-box photo if a flavor has no box textures
   const has3D = kind === "tube" || !!flavor.tex.front;
 
   useEffect(() => {

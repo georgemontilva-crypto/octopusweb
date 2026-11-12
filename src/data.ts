@@ -62,7 +62,6 @@ export const FLAVORS: Flavor[] = [
         "Sunken treasure, finally surfaced. Royal Haze is bright and golden — warm honey up front, a citrus snap behind it and a long amber finish worthy of the throne.",
       notes: ["Golden honey", "Citrus peel", "Amber resin"],
     },
-    false,
   ),
   make({
     slug: "purple-paradise",
@@ -161,7 +160,7 @@ export const LINES = [
     status: "available" as const,
     formats: ["Pre-Roll 2G", "Dabs 2.5G"],
     flavors: 6,
-    text: "Dried Blue Lotus flower and herbal botanicals in six flavors — our first line out of the deep.",
+    text: "Six flavors in two formats: Pre-Roll 2G and Dabs 2.5G botanical concentrate — our first line out of the deep.",
     image: "/img/p/lineup-blue.webp",
     art: "/img/art/abyss.webp",
   },
