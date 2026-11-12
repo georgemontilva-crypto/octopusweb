@@ -495,11 +495,15 @@ fieldset.field { gap: 12px; }
 .cat-text { margin: 10px 0 0; max-width: 520px; color: var(--muted); }
 .cat-box { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--flavor) 7%, transparent) 30%, transparent); }
 .fcard-num { letter-spacing: 0.08em; }
-.packs { margin-top: 30px; }
-.packs-row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 2px 14px; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
-.pack { flex: 0 0 clamp(150px, 22vw, 220px); margin: 0; scroll-snap-align: start; text-align: center; }
-.pack img { width: 100%; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5)); }
-.pack figcaption { margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.packs { margin-top: 44px; }
+.packs-title { margin: 0 0 16px; font: 800 13px/1.3 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.packs-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.pack { margin: 0; padding: 18px 14px 14px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); text-align: center; }
+.pack img { width: 100%; aspect-ratio: 1.1; object-fit: contain; filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.5)); }
+.pack figcaption { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+.pack figcaption b { font: 400 20px/1 var(--marker); }
+.pack figcaption span { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+@media (max-width: 760px) { .packs-row { grid-template-columns: repeat(2, 1fr); gap: 10px; } .pack { padding: 12px 8px 10px; border-radius: 16px; } .pack figcaption b { font-size: 16px; } }
 .ink-duo { grid-template-columns: 1fr; justify-items: center; }
 .ink-p { width: min(100%, 360px); height: 100%; }
 .ink-format { margin-top: 14px; display: flex; justify-content: center; }

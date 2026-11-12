@@ -9,13 +9,13 @@ const COPY: Record<Kind, { eyebrow: string; title: string; text: string; pack: s
     eyebrow: "Category · Pre-Roll 2G",
     title: "Pre-Rolls.",
     text: "One 2G pre-roll per child-resistant tube. Sold in a horizontal 20-pack box with window.",
-    pack: "20-pack box with window",
+    pack: "Pre-Roll 2G · 20-pack box with window + tube",
   },
   box: {
     eyebrow: "Category · Dabs 2.5G",
     title: "Dabs.",
     text: "2.5G botanical concentrate in the tall box. Same six flavors.",
-    pack: "Dabs box",
+    pack: "Dabs 2.5G · box",
   },
 };
 
@@ -34,12 +34,12 @@ export default function Collection({ kind, id }: { kind: Kind; id?: string }) {
           {FLAVORS.map((f, k) => <FlavorCard key={kind + f.slug} f={f} kind={kind} index={k} />)}
         </div>
         <div className="packs" aria-label={c.pack}>
-          <p className="pick-label">{c.pack}</p>
+          <h3 className="packs-title">{c.pack}</h3>
           <div className="packs-row">
             {FLAVORS.map((f) => (
               <figure key={f.slug} className="pack">
-                <img src={smUrl(kind === "tube" ? f.disp : f.box)} alt={`${f.name} ${kind === "tube" ? "pre-roll 20-pack box" : "dabs box"}`} loading="lazy" />
-                <figcaption>{f.name}</figcaption>
+                <img src={smUrl(kind === "tube" ? f.disp : f.box)} alt={`${f.name} ${kind === "tube" ? "pre-roll 20-pack box with window and tube" : "dabs box"}`} loading="lazy" />
+                <figcaption><b style={{ color: f.color }}>{f.name}</b><span>{f.vibe}</span></figcaption>
               </figure>
             ))}
           </div>
