@@ -10,7 +10,7 @@ export function WholesaleBand() {
         <div>
           <p className="eyebrow fb-eyebrow">For retailers & distributors</p>
           <h2 className="mega mega-sm fb-title">Put OCTOPUS<br />on your shelf</h2>
-          <p className="fb-text">Pre-rolls in 20-pack boxes with window. Dabs in the tall box.</p>
+          <p className="fb-text">Pre-rolls in 20-tube boxes. Dabs in tall and small boxes, plus a six-flavor counter display.</p>
           <div className="ctas">
             <InkLink href="/wholesale" className="btn btn-dark">Apply for wholesale</InkLink>
             <InkLink href="/contact" className="btn btn-dark-line">Contact us</InkLink>

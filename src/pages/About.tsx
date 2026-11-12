@@ -44,9 +44,10 @@ export default function About() {
             <p className="eyebrow">Our lines</p>
             <h2 className="h2">One brand, <em>many arms.</em></h2>
             <ul className="about-lines">
-              {LINES.map((l) => (
-                <li key={l.id}><b>{l.name}</b><span>{l.formats.join(" · ")} · {l.flavors} flavors</span><em className="ok">Available</em></li>
-              ))}
+              {LINES.flatMap((l) => [
+                <li key={l.id + "p"}><b>{l.name} Pre-Rolls</b><span>2G · {l.flavors} flavors</span><em className="ok">Available</em></li>,
+                <li key={l.id + "d"}><b>{l.name} Dabs</b><span>2.5G · {l.flavors} flavors</span><em className="ok">Available</em></li>,
+              ])}
               <li><b>More lines</b><span>In development</span><em>Coming soon</em></li>
             </ul>
             <div className="ctas">

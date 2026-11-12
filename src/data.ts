@@ -14,23 +14,27 @@ export type Flavor = {
   disp: string;
   box: string;
   tall: string;
+  /** tall box + small box together */
+  dabs: string;
   /** textures for the real 3D models (tube label + dabs box faces) */
-  tex: { tube: string; front: string | null; side: string | null };
+  tex: { tube: string; front: string | null; side: string | null; cube: { front: string; side: string; top: string } };
 };
 
 const img = (slug: string, k: string) => `/img/p/${slug}-${k}.webp`;
 
-const make = (f: Omit<Flavor, "art" | "tube" | "disp" | "box" | "tall" | "tex">, hasTall = true): Flavor => ({
+const make = (f: Omit<Flavor, "art" | "tube" | "disp" | "box" | "tall" | "dabs" | "tex">, hasTall = true): Flavor => ({
   ...f,
   art: `/img/art/${f.slug}.webp`,
   tube: img(f.slug, "tube"),
   disp: img(f.slug, "disp"),
   box: img(f.slug, "box"),
+  dabs: img(f.slug, "dabs"),
   tall: hasTall ? img(f.slug, "tall") : img(f.slug, "box"),
   tex: {
     tube: `/img/3d/${f.slug}-tube.webp`,
     front: hasTall ? `/img/3d/${f.slug}-box-front.webp` : null,
     side: hasTall ? `/img/3d/${f.slug}-box-side.webp` : null,
+    cube: { front: `/img/3d/${f.slug}-cube-front.webp`, side: `/img/3d/${f.slug}-cube-side.webp`, top: `/img/3d/${f.slug}-cube-top.webp` },
   },
 });
 
@@ -125,7 +129,7 @@ export const FORMATS = [
     name: "Blue Lotus Pre-Roll",
     size: "2G",
     kicker: "1 pre-roll · child-resistant tube",
-    pack: "20-pack countertop display",
+    pack: "20-tube box",
     text: "A full two grams of dried Blue Lotus flower and botanicals, hand-rolled and sealed in a glow-printed doob tube.",
     key: "tube" as const,
     pack_key: "disp" as const,
@@ -135,7 +139,7 @@ export const FORMATS = [
     name: "Blue Lotus Dabs",
     size: "2.5G",
     kicker: "Botanical concentrate",
-    pack: "6-flavor display",
+    pack: "Tall box + small box · 6-flavor counter display",
     text: "Blue Lotus distilled into a 2.5G botanical concentrate. Same six flavors, a whole new depth.",
     key: "tall" as const,
     pack_key: "box" as const,

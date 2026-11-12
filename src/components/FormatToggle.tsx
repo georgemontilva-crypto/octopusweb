@@ -1,4 +1,4 @@
-import type { Kind } from "../three/stage";
+type Kind = "tube" | "box";
 
 export default function FormatToggle({ kind, onChange }: { kind: Kind; onChange: (k: Kind) => void }) {
   return (

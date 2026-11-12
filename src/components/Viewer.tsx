@@ -11,12 +11,12 @@ const VIEWS = [
 
 /** Apple-style product viewer: drag to rotate 360° (inside the viewer only), preset views, zoom. */
 export default function Viewer({ flavor, kind }: { flavor: Flavor; kind: Kind }) {
-  const ctrl = useMemo<Ctrl>(() => ({ yaw: kind === "box" ? 0.5 : 0, pitch: 0.06, zoom: 1, progress: 0 }), [kind]);
+  const ctrl = useMemo<Ctrl>(() => ({ yaw: kind === "tube" ? 0 : 0.5, pitch: 0.06, zoom: 1, progress: 0 }), [kind]);
   const box = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
   const [view, setView] = useState("front");
   const [hint, setHint] = useState(true);
-  const has3D = kind === "tube" || !!flavor.tex.front;
+  const has3D = kind !== "box" || !!flavor.tex.front;
 
   useEffect(() => {
     const el = box.current;

@@ -1,7 +1,6 @@
 import Collection from "../sections/Collection";
 import { WholesaleBand } from "../sections/Bands";
 import { scrollToEl } from "../lib/motion";
-import { LINES } from "../data";
 import { InkLink } from "../components/Transition";
 import { useSeo } from "../lib/seo";
 import { resetTint } from "../lib/theme";
@@ -20,19 +19,13 @@ export default function Products() {
         <p className="eyebrow">Products</p>
         <h1 className="display">Our <em>lines.</em></h1>
         <div className="lines-tabs">
-          {LINES.map((l) => (
-            <span key={l.id} className="line-pill is-on">
-              <b>{l.name}</b>
-              <span>{l.flavors} flavors</span>
-            </span>
-          ))}
-          <a href="#prerolls" className="line-pill" onClick={(e) => { e.preventDefault(); scrollToEl("#prerolls"); }}>
-            <b>Pre-Rolls</b>
-            <span>2G tube · 20-pack box</span>
+          <a href="#prerolls" className="line-pill is-on" onClick={(e) => { e.preventDefault(); scrollToEl("#prerolls"); }}>
+            <b>Blue Lotus Pre-Rolls</b>
+            <span>2G · 6 flavors</span>
           </a>
-          <a href="#dabs" className="line-pill" onClick={(e) => { e.preventDefault(); scrollToEl("#dabs"); }}>
-            <b>Dabs</b>
-            <span>2.5G tall box</span>
+          <a href="#dabs" className="line-pill is-on" onClick={(e) => { e.preventDefault(); scrollToEl("#dabs"); }}>
+            <b>Blue Lotus Dabs</b>
+            <span>2.5G · 6 flavors</span>
           </a>
           <InkLink href="/contact" className="line-pill line-pill-soon">
             <b>More lines</b>

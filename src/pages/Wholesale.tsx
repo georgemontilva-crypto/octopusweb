@@ -5,7 +5,7 @@ import { resetTint } from "../lib/theme";
 import { srcSet } from "../lib/img";
 
 const TYPES = ["Smoke shop", "Convenience store", "Dispensary / CBD store", "Distributor", "Online retailer", "Other"];
-const PRODUCTS = ["Blue Lotus Pre-Roll 2G (tube · 20-pack box with window)", "Blue Lotus Dabs 2.5G (tall box)"];
+const PRODUCTS = ["Blue Lotus Pre-Rolls 2G (20-tube box)", "Blue Lotus Dabs 2.5G (tall box + small box)", "Blue Lotus Dabs 2.5G counter display (6 flavors)"];
 
 export default function Wholesale() {
   useSeo("Wholesale · OCTOPUS", "Carry OCTOPUS in your store. Apply for wholesale pricing.");
@@ -18,7 +18,7 @@ export default function Wholesale() {
         <h1 className="display">Carry <em>OCTOPUS.</em></h1>
         <p className="lead">Retailers and distributors: tell us about your business and we'll send wholesale pricing and availability.</p>
         <ul className="perks">
-          <li><b>Counter-ready displays</b><span>Pre-rolls in 20-pack boxes with window. Dabs in the tall box.</span></li>
+          <li><b>Counter-ready displays</b><span>Pre-rolls in 20-tube boxes. Dabs in a six-flavor counter display.</span></li>
           <li><b>Six flavors</b><span>One line, a full color range on the shelf.</span></li>
           <li><b>Lab tested</b><span>QR code on every pack links to lab results.</span></li>
         </ul>
@@ -42,7 +42,7 @@ export default function Wholesale() {
         <fieldset className="field">
           <span>Products of interest</span>
           {PRODUCTS.map((p) => (
-            <label className="check" key={p}><input type="checkbox" name="products" value={p} defaultChecked={product.includes("Pre-Roll") ? p.includes("Pre-Roll") : product.includes("Dabs") ? p.includes("Dabs") : !!product} /> <span>{p}</span></label>
+            <label className="check" key={p}><input type="checkbox" name="products" value={p} defaultChecked={product.includes("counter display") ? p.includes("counter display") : product.includes("Pre-Roll") ? p.includes("Pre-Roll") : product.includes("Dabs") ? p.startsWith("Blue Lotus Dabs 2.5G (") : !!product} /> <span>{p}</span></label>
           ))}
         </fieldset>
         <Field name="message" label="Anything else?" area defaultValue={product ? `Interested in ${product}.` : ""} />

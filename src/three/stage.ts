@@ -10,11 +10,11 @@ import { isTouch, reducedMotion } from "../lib/theme";
 import { small, smUrl } from "../lib/img";
 import { isScrolling } from "../lib/motion";
 
-export type Kind = "tube" | "box";
+export type Kind = "tube" | "box" | "cube";
 export type SlotOpts = {
   kind: Kind;
   color: string;
-  tex: { tube: string; front: string | null; side: string | null };
+  tex: { tube: string; front: string | null; side: string | null; cube?: { front: string; side: string; top: string } };
   yaw?: number;
   fill?: number;
   sway?: number;
@@ -57,6 +57,8 @@ const TUBE_H = 1;
 const TUBE_R = TUBE_H / 5.99 / 2;
 const BOX_H = 1;
 const BOX_W = BOX_H * 0.259;
+// small dabs box (cube-ish): width : height : depth
+const CUBE_W = 0.62, CUBE_H = 0.48, CUBE_D = 0.56;
 
 class Stage {
   renderer: THREE.WebGLRenderer | null = null;
@@ -150,6 +152,12 @@ class Stage {
       bottom.rotation.x = Math.PI / 2;
       bottom.position.y = -TUBE_H / 2;
       g.add(top, bottom);
+    } else if (o.kind === "cube" && o.tex.cube) {
+      const m = (src: string) => new THREE.MeshPhysicalMaterial({ map: this.tex(src, "face"), roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.25 });
+      const front = m(o.tex.cube.front), side = m(o.tex.cube.side), top = m(o.tex.cube.top);
+      const under = new THREE.MeshStandardMaterial({ color: accent.clone().multiplyScalar(0.3), roughness: 0.6 });
+      // +x, -x, +y, -y, +z, -z
+      g.add(new THREE.Mesh(new THREE.BoxGeometry(CUBE_W, CUBE_H, CUBE_D), [side, side, top, under, front, front]));
     } else {
       const front = new THREE.MeshPhysicalMaterial({ map: this.tex(o.tex.front!, "face"), roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.25 });
       const side = new THREE.MeshPhysicalMaterial({ map: this.tex(o.tex.side!, "face"), roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.25 });
@@ -330,10 +338,10 @@ class Stage {
         // externally driven (viewer / scroll scene): smooth towards the requested pose
         const ty = c.yaw + (o.yaw ?? 0) + Math.sin(t * 0.6 + ph) * 0.04;
         g.rotation.y += (ty - g.rotation.y) * 0.18;
-        g.rotation.x += (c.pitch - g.rotation.x) * 0.18;
+        g.rotation.x += ((o.kind === "cube" ? 0.32 : 0) + c.pitch - g.rotation.x) * 0.18;
       } else {
         g.rotation.y = (o.yaw ?? 0) + base + s.dragYaw + s.hoverX * 0.35;
-        g.rotation.x = s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
+        g.rotation.x = (o.kind === "cube" ? 0.32 : 0) + s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
       }
       let extraH = 0;
       if (o.pop) {
@@ -364,8 +372,8 @@ class Stage {
       const aspect = s.w / s.h;
       const fill = o.fill ?? 0.84;
       const tan = Math.tan(((s.cam.fov * Math.PI) / 180) / 2);
-      const objW = o.kind === "tube" ? TUBE_R * 2.4 : BOX_W * 1.9;
-      const objH = 1.08 + extraH;
+      const objW = o.kind === "tube" ? TUBE_R * 2.4 : o.kind === "cube" ? CUBE_W * 1.35 : BOX_W * 1.9;
+      const objH = (o.kind === "cube" ? CUBE_H * 1.75 : 1.08) + extraH;
       let dist = Math.max(objH / fill / 2 / tan, objW / fill / 2 / tan / aspect);
       if (c) dist /= c.zoom;
       s.cam.aspect = aspect;
