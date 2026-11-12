@@ -19,15 +19,14 @@ const STICKERS = [
 /** The ink wall: squirt octopus ink in the flavor color, drag the stickers, pick a flavor. */
 export default function InkHero() {
   const [i, setI] = useState(0);
-  const [armed, setArmed] = useState(false);
   const [kind, setKind] = useState<Kind>("tube");
   const touch = isTouch();
   const f = HERO[i];
   useEffect(() => setTint(f.color, f.color2), [f]);
 
   return (
-    <section className={"ink-hero" + (armed ? " is-inking" : "")} style={{ ["--c" as string]: f.color }}>
-      <InkWall color={f.color} armed={armed} />
+    <section className="ink-hero" style={{ ["--c" as string]: f.color }}>
+      {!touch && <InkWall color={f.color} armed={false} />}
       <Stickers items={STICKERS} />
       <div className="wrap ink-grid">
         <div className="ink-copy">
@@ -41,15 +40,11 @@ export default function InkHero() {
             <InkLink href="/products" className="btn btn-flavor">Explore products</InkLink>
             <InkLink href="/wholesale" className="btn btn-line">Wholesale</InkLink>
           </div>
-          <p className="ink-hint" data-noink>
-            {touch ? (
-              <button className={"ink-toggle" + (armed ? " is-on" : "")} onClick={() => setArmed((a) => !a)} aria-pressed={armed}>
-                {armed ? "✓ Ink mode on — draw with your finger" : "🐙 Ink mode — tap to squirt ink"}
-              </button>
-            ) : (
+          {!touch && (
+            <p className="ink-hint" data-noink>
               <span>🐙 Hold & drag anywhere to squirt ink · drag the stickers</span>
-            )}
-          </p>
+            </p>
+          )}
         </div>
         <div className="ink-stage" data-noink>
           <InkLink href={`/products/${f.slug}${kind === "tube" ? "" : "?format=dabs"}`} className="ink-duo" ariaLabel={`${f.name} ${kind === "tube" ? "Pre-Roll 2G" : "Dabs 2.5G"} — view in 3D`}>

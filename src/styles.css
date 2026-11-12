@@ -380,7 +380,6 @@ fieldset.field { gap: 12px; }
 
 /* ink hero */
 .ink-hero { -webkit-user-select: none; user-select: none; position: relative; overflow: hidden; padding: calc(96px + env(safe-area-inset-top)) 0 56px; min-height: min(100svh, 940px); display: flex; align-items: center; isolation: isolate; }
-.ink-hero.is-inking { touch-action: none; }
 .inkwall { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .ink-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 60px); align-items: center; pointer-events: none; }
 .ink-grid a, .ink-grid button, .ink-stage { pointer-events: auto; }
@@ -530,3 +529,9 @@ fieldset.field { gap: 12px; }
 /* tentacles hugging the pre-roll scene */
 .pop-stage .tentacles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .pop-stage .pop-p { z-index: 1; }
+
+/* phones: no drawing, stickers are decoration only, scrolling is never blocked */
+@media (hover: none), (pointer: coarse) {
+  .ink-hero { -webkit-user-select: auto; user-select: auto; }
+  .sticker { pointer-events: none; touch-action: auto; cursor: default; }
+}
