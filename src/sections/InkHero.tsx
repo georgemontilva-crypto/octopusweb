@@ -3,6 +3,8 @@ import Product3D from "../three/Product3D";
 import InkWall from "../components/InkWall";
 import Stickers from "../components/Stickers";
 import { InkLink } from "../components/Transition";
+import FormatToggle from "../components/FormatToggle";
+import type { Kind } from "../three/stage";
 import { FLAVORS } from "../data";
 import { setTint, isTouch } from "../lib/theme";
 
@@ -18,6 +20,7 @@ const STICKERS = [
 export default function InkHero() {
   const [i, setI] = useState(0);
   const [armed, setArmed] = useState(false);
+  const [kind, setKind] = useState<Kind>("tube");
   const touch = isTouch();
   const f = HERO[i];
   useEffect(() => setTint(f.color, f.color2), [f]);
@@ -50,14 +53,10 @@ export default function InkHero() {
         </div>
         <div className="ink-stage" data-noink>
           <div className="ink-duo">
-            <div className="ink-item">
-              <Product3D key={"b" + f.slug} flavor={f} kind="box" className="ink-p ink-p-box" fill={0.9} phase={1.2} />
-              <span className="ink-tag">Dabs 2.5G</span>
-            </div>
-            <div className="ink-item ink-item-tube">
-              <Product3D key={"t" + f.slug} flavor={f} kind="tube" className="ink-p ink-p-tube" fill={0.92} />
-              <span className="ink-tag">Pre-Roll 2G</span>
-            </div>
+            <Product3D key={kind + f.slug} flavor={f} kind={kind} className="ink-p" fill={kind === "tube" ? 0.92 : 0.9} />
+          </div>
+          <div className="ink-format">
+            <FormatToggle kind={kind} onChange={setKind} />
           </div>
           <div className="flavor-chips" role="radiogroup" aria-label="Flavor">
             {HERO.map((x, k) => (

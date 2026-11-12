@@ -390,9 +390,9 @@ fieldset.field { gap: 12px; }
 .ink-toggle.is-on { background: var(--flavor); color: var(--on-flavor); border-style: solid; }
 .ink-stage { position: relative; display: flex; flex-direction: column; align-items: center; }
 .ink-duo { width: 100%; height: min(60vh, 560px); display: grid; grid-template-columns: 1fr 0.72fr; align-items: end; padding: 0 6%; background: radial-gradient(ellipse 60% 55% at 50% 60%, color-mix(in srgb, var(--flavor) 30%, transparent), transparent 70%); transition: background 0.6s; }
-.ink-item { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; min-width: 0; }
-.ink-item .ink-p { flex: 1; width: 100%; min-height: 0; }
-.ink-item-tube { height: 94%; margin-left: -18%; }
+
+
+
 .ink-tag { margin-top: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(0, 0, 0, 0.55); border: 1px solid color-mix(in srgb, var(--flavor) 60%, transparent); font: 800 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: #fff; white-space: nowrap; }
 .flavor-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
 .fchip { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--line); background: rgba(9, 7, 15, 0.7); font: 700 13px/1 var(--sans); color: var(--muted); transition: all 0.25s; }
@@ -490,3 +490,17 @@ fieldset.field { gap: 12px; }
   .viewer-bar { justify-content: center; }
   .facts b { font-size: 36px; }
 }
+
+/* categories: Pre-Rolls / Dabs */
+.cat-text { margin: 10px 0 0; max-width: 520px; color: var(--muted); }
+.cat-box { background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--flavor) 7%, transparent) 30%, transparent); }
+.fcard-num { letter-spacing: 0.08em; }
+.packs { margin-top: 30px; }
+.packs-row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 2px 14px; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.pack { flex: 0 0 clamp(150px, 22vw, 220px); margin: 0; scroll-snap-align: start; text-align: center; }
+.pack img { width: 100%; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.5)); }
+.pack figcaption { margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.ink-duo { grid-template-columns: 1fr; justify-items: center; }
+.ink-p { width: min(100%, 360px); height: 100%; }
+.ink-format { margin-top: 14px; display: flex; justify-content: center; }
+.media-tall { max-height: 520px; width: auto !important; margin: 0 auto; object-fit: contain; }

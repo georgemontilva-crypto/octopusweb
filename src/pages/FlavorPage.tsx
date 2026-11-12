@@ -13,7 +13,7 @@ import NotFound from "./NotFound";
 export default function FlavorPage() {
   const { slug = "" } = useParams<{ slug: string }>();
   const f = flavorBySlug(slug);
-  const [kind, setKind] = useState<Kind>("tube");
+  const [kind, setKind] = useState<Kind>(() => (new URLSearchParams(window.location.search).get("format") === "dabs" ? "box" : "tube"));
   useSeo(f ? `${f.name} · Blue Lotus · OCTOPUS` : "OCTOPUS", f ? `OCTOPUS Blue Lotus ${f.name} — ${f.vibe}. Pre-Roll 2G and Dabs 2.5G. 21+.` : undefined);
   useEffect(() => {
     if (f) setTint(f.color, f.color2);
@@ -42,7 +42,7 @@ export default function FlavorPage() {
               <span className="pick-label">Flavor</span>
               <div className="swatches">
                 {FLAVORS.map((x) => (
-                  <InkLink key={x.slug} href={`/products/${x.slug}`} className={"swatch" + (x.slug === f.slug ? " is-on" : "")} ariaLabel={x.name}>
+                  <InkLink key={x.slug} href={`/products/${x.slug}${kind === "box" ? "?format=dabs" : ""}`} className={"swatch" + (x.slug === f.slug ? " is-on" : "")} ariaLabel={x.name}>
                     <i style={{ background: x.color }} />
                   </InkLink>
                 ))}
@@ -50,26 +50,41 @@ export default function FlavorPage() {
             </div>
             <dl className="spec">
               <div><dt>Aroma notes</dt><dd>{f.notes.join(", ")}</dd></div>
-              <div><dt>{kind === "tube" ? "Pre-Roll" : "Dabs"}</dt><dd>{kind === "tube" ? "2G · 1 pre-roll per tube · 20-pack display" : "2.5G botanical concentrate · 6-flavor display"}</dd></div>
+              <div><dt>{kind === "tube" ? "Pre-Roll" : "Dabs"}</dt><dd>{kind === "tube" ? "2G · 1 pre-roll per tube · 20-pack box with window" : "2.5G botanical concentrate · tall box"}</dd></div>
               <div><dt>Ingredients</dt><dd>{kind === "tube" ? `${INGREDIENTS.map((x) => x.name).join(", ")}, food-grade binding agent` : "Blue Lotus botanical concentrate"}</dd></div>
               <div><dt>Free from</dt><dd>THC · Hemp · Delta · Synthetic cannabinoids</dd></div>
             </dl>
             <div className="ctas">
-              <InkLink href={`/wholesale?product=${encodeURIComponent("Blue Lotus " + f.name)}`} className="btn btn-flavor">Wholesale inquiry</InkLink>
+              <InkLink href={`/wholesale?product=${encodeURIComponent(`Blue Lotus ${f.name} — ${kind === "tube" ? "Pre-Roll 2G" : "Dabs 2.5G"}`)}`} className="btn btn-flavor">Wholesale inquiry</InkLink>
               <InkLink href="/lab-reports" className="btn btn-line">Lab report</InkLink>
             </div>
           </div>
         </div>
       </section>
       <section className="wrap pdp-displays">
-        <figure className="media-card">
-          <img src={f.disp} srcSet={srcSet(f.disp)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} pre-roll 20-pack display`} loading="lazy" />
-          <figcaption>Pre-Roll · 20-pack display</figcaption>
-        </figure>
-        <figure className="media-card">
-          <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} Blue Lotus Dabs 2.5G box`} loading="lazy" />
-          <figcaption>Dabs 2.5G · box</figcaption>
-        </figure>
+        {kind === "tube" ? (
+          <>
+            <figure className="media-card">
+              <img src={f.tube} srcSet={srcSet(f.tube)} sizes="(max-width: 760px) 45vw, 22vw" alt={`${f.name} pre-roll 2G tube`} loading="lazy" className="media-tall" />
+              <figcaption>Pre-Roll 2G · tube</figcaption>
+            </figure>
+            <figure className="media-card">
+              <img src={f.disp} srcSet={srcSet(f.disp)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} pre-roll 20-pack box with window`} loading="lazy" />
+              <figcaption>Pre-Roll 2G · 20-pack box with window</figcaption>
+            </figure>
+          </>
+        ) : (
+          <>
+            <figure className="media-card">
+              <img src={f.tall} srcSet={srcSet(f.tall)} sizes="(max-width: 760px) 45vw, 22vw" alt={`${f.name} dabs 2.5G tall box`} loading="lazy" className="media-tall" />
+              <figcaption>Dabs 2.5G · tall box</figcaption>
+            </figure>
+            <figure className="media-card">
+              <img src={f.box} srcSet={srcSet(f.box)} sizes="(max-width: 760px) 90vw, 45vw" alt={`${f.name} dabs 2.5G box`} loading="lazy" />
+              <figcaption>Dabs 2.5G · box</figcaption>
+            </figure>
+          </>
+        )}
       </section>
     </div>
   );

@@ -1,7 +1,7 @@
 import InkHero from "../sections/InkHero";
 import Collection from "../sections/Collection";
 import PopTop from "../sections/PopTop";
-import { DabsBand, WholesaleBand, InfoBand } from "../sections/Bands";
+import { WholesaleBand, InfoBand } from "../sections/Bands";
 import { useSeo } from "../lib/seo";
 
 export default function Home() {
@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <>
       <InkHero />
-      <Collection id="collection" />
+      <Collection kind="tube" id="prerolls" />
       <PopTop />
-      <DabsBand />
+      <Collection kind="box" id="dabs" />
       <WholesaleBand />
       <InfoBand />
     </>
