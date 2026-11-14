@@ -1,9 +1,14 @@
 import { useEffect } from "react";
-import { FLAVORS } from "../data";
+import { FLAVORS, type Flavor } from "../data";
 import { InkLink } from "../components/Transition";
 import { useSeo } from "../lib/seo";
 import { resetTint } from "../lib/theme";
 import { smUrl } from "../lib/img";
+
+const CATS = [
+  { id: "pre", title: "Blue Lotus Pre-Rolls", col: "Pre-Roll 2G", img: (f: Flavor) => f.tube },
+  { id: "dabs", title: "Blue Lotus Dabs", col: "Dabs 2.5G · tall box + small box", img: (f: Flavor) => f.dabs },
+];
 
 export default function LabReports() {
   useSeo("Lab Report · OCTOPUS", "Lab reports for OCTOPUS products, by line and flavor.");
@@ -17,22 +22,25 @@ export default function LabReports() {
       </header>
       <section className="sec sec-tight">
         <div className="wrap">
-          <h2 className="h3 lab-line">Blue Lotus</h2>
-          <div className="lab-table" role="table" aria-label="Blue Lotus lab reports">
-            <div className="lab-row lab-row-head" role="row">
-              <span role="columnheader">Flavor</span><span role="columnheader">Pre-Roll 2G</span><span role="columnheader">Dabs 2.5G</span>
-            </div>
-            {FLAVORS.map((f) => (
-              <div className="lab-row" role="row" key={f.slug}>
-                <span role="cell" className="lab-flavor">
-                  <img src={smUrl(f.tube)} alt="" loading="lazy" />
-                  <InkLink href={`/products/${f.slug}`}><b>{f.name}</b></InkLink>
-                </span>
-                <span role="cell" className="lab-status">Coming soon</span>
-                <span role="cell" className="lab-status">Coming soon</span>
+          {CATS.map((c) => (
+            <div key={c.id} className="lab-block">
+              <h2 className="h3 lab-line">{c.title}</h2>
+              <div className="lab-table" role="table" aria-label={`${c.title} lab reports`}>
+                <div className="lab-row lab-row-head" role="row">
+                  <span role="columnheader">Flavor</span><span role="columnheader">{c.col}</span>
+                </div>
+                {FLAVORS.map((f) => (
+                  <div className="lab-row" role="row" key={c.id + f.slug}>
+                    <span role="cell" className="lab-flavor">
+                      <img src={smUrl(c.img(f))} alt="" loading="lazy" className={"lab-img-" + c.id} />
+                      <InkLink href={`/products/${f.slug}${c.id === "dabs" ? "?format=dabs" : ""}`}><b>{f.name}</b></InkLink>
+                    </span>
+                    <span role="cell" className="lab-status">Coming soon</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
           <p className="fine">Questions about a batch? <InkLink href="/contact" className="link-arrow">Contact us →</InkLink></p>
         </div>
       </section>

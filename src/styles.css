@@ -526,3 +526,19 @@ fieldset.field { gap: 12px; }
 .ink-format { margin-top: 14px; display: flex; justify-content: center; }
 .media-tall { max-height: 520px; width: auto !important; margin: 0 auto; object-fit: contain; }
 
+
+/* pop scene: the 3D canvas fills the whole sticky screen so tentacles come up from the bottom edge */
+.pop-grid { position: relative; z-index: 1; height: 100%; }
+.pop-sticky > .pop-stage-full { position: absolute; inset: 0; z-index: 0; }
+.pop-stage-full .pop-p { position: absolute; top: 0; bottom: 0; left: 50%; width: 50%; }
+.pop-stage-full .pop-glow { left: 50%; right: 0; inset-inline-start: 50%; }
+@media (max-width: 760px) {
+  .pop-grid { display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: calc(26px + env(safe-area-inset-bottom)); }
+  .pop-copy { position: relative; padding-top: 70px; background: linear-gradient(transparent, rgba(5, 4, 10, 0.92) 40%); margin-inline: -24px; padding-inline: 24px; }
+  .pop-stage-full .pop-p { left: 0; width: 100%; }
+  .pop-stage-full .pop-glow { inset: 0 0 20% 0; }
+}
+
+.lab-block + .lab-block { margin-top: 44px; }
+.lab-row { grid-template-columns: 1.4fr 1fr; }
+.lab-flavor img.lab-img-dabs { width: 44px; height: 40px; object-fit: contain; }

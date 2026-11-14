@@ -368,34 +368,31 @@ class Stage {
         g.rotation.y = (o.yaw ?? 0) + base + s.dragYaw + s.hoverX * 0.35;
         g.rotation.x = (o.kind === "cube" ? 0.32 : 0) + s.hoverY * 0.12 + Math.sin(t * 0.9 + ph) * 0.03;
       }
-      let extraH = 0;
+      const extraH = 0;
       if (o.pop) {
         const p = c ? c.progress : 0;
         const e = (x: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
         const cap = g.getObjectByName("cap");
         const pre = g.getObjectByName("preroll");
         const body = g.getObjectByName("tubeBody");
-        const a = e(p / 0.3), b = e((p - 0.22) / 0.48), d = e((p - 0.7) / 0.3);
+        // 1) cap lifts off and steps aside  2) the pre-roll slides straight up,
+        //    its filter stays inside the tube (so it clearly comes from inside)
+        const a = e(p / 0.32), b = e((p - 0.28) / 0.6);
         if (cap) {
-          cap.position.y = cap.userData.y0 + a * 0.5 + b * 0.25;
-          cap.position.x = a * 0.16;
-          cap.rotation.z = -a * 0.9;
+          cap.position.y = cap.userData.y0 + a * 0.22 + b * 0.12;
+          cap.position.x = a * 0.26;
+          cap.rotation.z = -a * 0.45;
         }
         if (pre) {
-          pre.position.y = pre.userData.y0 + b * 0.62 + d * 0.08;
-          pre.rotation.z = d * 0.35;
-          pre.rotation.y = t * 0.6 * d;
+          pre.position.y = pre.userData.y0 + a * 0.05 + b * 0.44;
+          pre.rotation.set(0, 0, 0);
         }
-        if (body) body.position.y = -d * 0.18;
+        if (body) body.position.y = 0;
         const tg = g.getObjectByName("tentacles");
-        if (tg) {
-          tg.position.y = -d * 0.18;
-          (tg.userData.t as Tentacles).update(t, Math.min(1, (now - s.born) / 1400));
-        }
-        extraH = a * 0.45 + b * 0.55;
+        if (tg) (tg.userData.t as Tentacles).update(t, Math.min(1, (now - s.born) / 1400));
       }
-      g.rotation.z = Math.sin(t * 0.5 + ph) * 0.025;
-      g.position.y = Math.sin(t * 1.1 + ph) * 0.02;
+      g.rotation.z = o.pop ? 0 : Math.sin(t * 0.5 + ph) * 0.025;
+      g.position.y = o.pop ? 0 : Math.sin(t * 1.1 + ph) * 0.02;
       const k = Math.min(1, (now - s.born) / 280);
       g.scale.setScalar(0.92 + 0.08 * (1 - Math.pow(1 - k, 3)));
 
@@ -405,10 +402,18 @@ class Stage {
       const objW = o.kind === "tube" ? (o.tentacles ? 0.62 : TUBE_R * 2.4) : o.kind === "cube" ? CUBE_W * 1.35 : BOX_W * 1.9;
       const objH = (o.kind === "cube" ? CUBE_H * 1.75 : 1.08) + extraH;
       let dist = Math.max(objH / fill / 2 / tan, objW / fill / 2 / tan / aspect);
-      if (c) dist /= c.zoom;
+      let camY = 0.02 + extraH * 0.32, lookY = extraH * 0.32;
+      if (o.pop) {
+        // fixed frame that always holds the whole effect: tentacles enter from the bottom edge,
+        // cap and pre-roll fully out at the top never get cut
+        const yMax = aspect < 0.8 ? 1.75 : 1.55, yMin = aspect < 0.8 ? -1.75 : -1.3;
+        const hh = yMax - yMin;
+        dist = Math.max(hh / 2 / tan, 1.05 / 2 / tan / aspect);
+        camY = lookY = (yMax + yMin) / 2;
+      } else if (c) dist /= c.zoom;
       s.cam.aspect = aspect;
-      s.cam.position.set(0, 0.02 + extraH * 0.32, dist);
-      s.cam.lookAt(0, extraH * 0.32, 0);
+      s.cam.position.set(0, camY, dist);
+      s.cam.lookAt(0, lookY, 0);
       s.cam.updateProjectionMatrix();
       this.rimL.color.copy(s.rim);
 

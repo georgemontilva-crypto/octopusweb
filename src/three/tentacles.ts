@@ -16,9 +16,10 @@ export class Tentacles {
   private arms: Arm[] = [];
   constructor(color: string, tubeR: number, mobile: boolean) {
     const specs: Spec[] = [
-      { a0: -2.0, dir: 1, y0: -0.7, h: 0.92, turns: 0.72, w: 0.072, ph: 0 },
-      { a0: 0.7, dir: -1, y0: -0.74, h: 0.7, turns: 0.6, w: 0.066, ph: 2.1 },
-      { a0: 2.8, dir: 1, y0: -0.76, h: 0.5, turns: 0.42, w: 0.058, ph: 4.2 },
+      // roots start below the bottom edge of the frame and climb up onto the tube
+      { a0: -2.1, dir: 1, y0: -1.95, h: 2.15, turns: 0.85, w: 0.085, ph: 0 },
+      { a0: 0.6, dir: -1, y0: -2.0, h: 1.9, turns: 0.7, w: 0.08, ph: 2.1 },
+      { a0: 2.7, dir: 1, y0: -2.0, h: 1.55, turns: 0.55, w: 0.07, ph: 4.2 },
     ];
     const use = mobile ? specs.slice(0, 2) : specs;
     const base = new THREE.Color(color);
@@ -107,12 +108,12 @@ class Arm {
     for (let i = 0; i <= SEG; i++) {
       const u = (i / SEG) * grow;
       const wave = Math.sin(t * 1.3 + s.ph - u * 6) * 0.05 * u;
-      const ang = s.a0 + s.dir * (u * s.turns * Math.PI * 2 + Math.sin(t * 0.7 + s.ph + u * 2.5) * 0.35 * u);
+      const ang = s.a0 + s.dir * (Math.pow(u, 1.6) * s.turns * Math.PI * 2 + Math.sin(t * 0.7 + s.ph + u * 2.5) * 0.3 * u);
       const w = s.w * Math.pow(1 - u, 0.9) + 0.0035;
       W[i] = w;
       // hug the tube; the root comes from further out, the tip curls away
       const curl = Math.max(0, u - 0.82) / 0.18;
-      const rad = tubeR + w * 0.92 + 0.004 + Math.pow(1 - u, 2.6) * 0.1 + curl * curl * 0.06 + wave * 0.3;
+      const rad = tubeR + w * 0.92 + 0.004 + Math.pow(1 - u, 2) * 0.34 + curl * curl * 0.06 + wave * 0.3;
       const y = s.y0 + u * s.h + Math.sin(t * 1.1 + s.ph + u * 4) * 0.025 * u + curl * curl * 0.05;
       P[i].set(Math.cos(ang) * rad, y, Math.sin(ang) * rad);
     }
